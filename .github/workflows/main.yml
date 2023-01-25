@@ -9,7 +9,7 @@ env:
   HEPASSWORD: ${{ secrets.HEPASSWORD }}
   DOTOKEN: ${{ secrets.DOTOKEN }}
   DOID: ${{ secrets.DOID }}
-  ROOT_PATH: src
+  ROOT_PATH: /
   
 jobs:
   build:
