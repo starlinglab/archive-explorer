@@ -1,0 +1,354 @@
+* {
+    word-break: break-word;
+}
+
+body,
+html {
+    background-color: black;
+    color: white;
+    line-height: 1.5rem;
+    font-family: Georgia,'Times New Roman' ,Times,serif;
+;
+    padding: 0.25rem;
+}
+h1 {
+    font-family: 'FakeReceipt';
+    font-size: 2rem;
+}
+a {
+    color: white;
+    padding: .25em .75em;
+    border: 1px solid #fff9f2;
+    border-radius: 100px;
+    text-decoration: none;
+    margin: 0.15rem;
+}
+a:hover {
+    background-color: white;
+    color: black;
+    text-decoration: none;
+}
+#container {
+    width:100%;
+    margin-top: 1rem;
+}
+input {
+    width:auto;
+    border-radius: 10px;
+    padding: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: black;
+    border-color: white;
+    color: white;
+    font-size: 1.25rem;
+    font-family: Georgia,'Times New Roman' ,Times,serif;
+}
+input:focus-visible, #hello:focus-visible {
+outline: 2px dotted white;
+border-radius: 3px;
+}
+.image_view {
+    width: 100%;
+            }
+#hello {
+    font-family: 'FakeReceipt';
+    font-size: calc(1rem);
+    background-color: black;
+    color: white;
+    padding: 1rem;
+    border-radius: 1rem;
+    border-color: white;
+    float: right;
+    margin-right: 1rem;
+    margin-top: 0.3rem;
+}
+#hello:hover {
+    background-color: grey;
+    color: black;
+}
+#nameDesc {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+.d-none {
+    display: none;
+}
+.d-flex {
+    display: flex;
+    flex-direction: row;
+}
+
+ul {
+    padding-left: 0;
+}
+
+ul {
+    list-style: none;
+}
+#connect_details {
+    font-family: 'FakeReceipt';
+    margin: 1em;
+    margin-top:1.5em;
+    display: block;
+    flex-wrap: wrap;
+    width: auto;
+    background-color: rgb(34, 34, 34);
+    padding: 1em;
+    border-radius: 15px;
+    border: 1px dashed white;
+    font-size: 1rem;
+}
+#connect_details div {
+    margin: 0rem 0.5rem ;
+}
+#connect_details input {
+    margin:0.4rem 0rem;
+    width:auto;
+}
+
+#image_div {
+    max-width: 35%;
+    padding: 1rem;
+}
+#image_div div {
+    float: left;
+}
+#webrecorder {
+    padding-left: 50px;
+}
+#signal,
+#proofmode,
+#recorderMetadata,
+#contentMetadata {
+    padding: 0.5rem 0.5rem 0.5rem 0.5em;
+    text-transform: uppercase;
+    list-style: none;
+    color: white;
+    border: 1px solid white;
+    width: fit-content;
+    transition: width 2s;
+    margin: 0.5rem 0.5rem 0.5rem 0;
+}
+#signal:hover,
+#proofmode:hover,
+#recorderMetadata:hover {
+    border-style: dashed;
+}
+li li {
+    padding: 0.1em;
+    border: 1px solid black;
+    margin: 1em;
+}
+
+
+svg {
+    position: relative;
+    padding-top: 2px;
+}
+
+li .list-item-object:before {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: bolder;
+}
+
+.receiptFont {
+    font-family: 'FakeReceipt';
+}
+
+#publicKey,
+#authenticatedMessage,
+#sha256hash,
+#pgpPublicKey,
+#pgpSignature,
+#signature,
+#signature {
+    height: 100px;
+    overflow-y: scroll;
+    border: 2px dotted white;
+    text-decoration: none !important;
+}
+
+#txtURL {
+    width: 60%;
+    margin-top: 0.5rem;
+}
+
+#connection_input input {
+    margin: 0.25rem;
+}
+#connection_input #contract {
+    width:50%;
+}
+#connection_input #tokenID {
+    width:5%;
+}
+
+#all_metadata {
+    margin-top: 20rem;
+}
+#fileIcon img,
+.downloadIcon {
+    width: 20px;
+    margin-bottom: -5px;
+}
+
+#download_links div {
+    display: flex;
+    flex-wrap: wrap;
+}
+#connect_details #chain, #connect_details #type {
+    width:100px;
+}
+#download_links div,
+.btn-group {
+    padding: 0.5em;
+}
+#download_links a {
+    white-space: nowrap;
+}
+/* tooltip container for copying to clipboard */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border: 1px dotted white;
+    font-family: Georgia,'Times New Roman' ,Times,serif;
+    font-size: 1rem;
+    height: 1rem;
+    overflow: hidden;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+.overflowText {
+    overflow: hidden;
+    position: relative;
+    text-align: justify;
+    margin-right: -1em;
+    padding-right: 1em;
+    width: calc(100% - 20px);
+}
+
+.overflowText::after {
+    content: '...';
+    /*position: absolute;*/
+    right: 0;
+    bottom: 0;
+}
+
+strong {
+    font-family: 'FakeReceipt';
+}
+
+.content {
+    width: auto;
+    padding-top: 1rem;
+    padding-right:1rem;
+}
+
+.contentwWACZ {
+    width:40%;
+}
+
+.jsonButton {
+    font-family: 'FakeReceipt';
+    color:#fff;
+    padding: .25em .75em;
+    border: 1px solid #fff9f2;
+    border-radius: 100px;
+    background-color: transparent;
+    margin: 0.25rem;
+    font-size: 1rem;
+    }
+.jsonButton:hover {
+    background-color: #fff9f2;
+    color: #000;
+}
+#validated_signatures, #custom_attributes {
+    margin:1.5rem 0rem;
+}
+#timestamp {
+margin-bottom:1.5rem;}
+
+.authsignIMG,
+.otsIMG {
+    width: 20px;
+    margin-bottom: -3px;
+}
+
+a:hover .authsignIMG,
+a:hover .otsIMG {
+    filter: invert(100);
+}
+#webrecorder_container {
+    min-width: 60%;
+}
+#webrecorder_container, #connect_details input,
+#connect_details #txtLIT, #connect_details #contract,
+.fill-available {
+    width: fill-available;
+    width: -webkit-fill-available;
+    width: -moz-available;
+}
+#wacz {
+    padding: 1rem;
+    border-radius: 50px;
+    background-color: white;
+    height: 100%;
+    }
+
+.dataID {
+    padding: .5em .5em;
+background: rgb(45,45,45);
+border-radius: 3px;
+letter-spacing: -.08em;
+line-height: 1.2em;
+font-weight: 300;
+text-align: right;
+margin-top: -0.6rem;
+box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+#CID, #content_hash, #EncryptedArchiveHash {
+    margin-top:1rem;
+  }
+
+#content_hashes {
+    margin:1.5rem 0rem;
+}
+
+#contractAddress {
+    width:50%;
+}

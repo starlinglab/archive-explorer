@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Archive Explorer</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/stylesheets/app.css">
+    <script src="/scripts/jszip.js"></script>
+    <script src="/scripts/ipfs-hash.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/replaywebpage@1.7.10/ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        @font-face {
+            font-family: 'FakeReceipt';
+            font-style: normal;
+            font-weight: 500;
+            src: url('/fonts/fake-receipt-regular.ttf') format('truetype'), url('/fonts/fake-receipt.otf') format("opentype");
+        }
+    </style>
+</head>
+<script>
+    const contractAbi = [
+        // Some details about the token
+        "function tokenIdtoCreator(uint256 tokenId) view returns (address)",
+
+
+        "function getLITKey(uint256 tokenId) view returns (string)",
+        "function getArchiveDescription(uint256 tokenId) view returns (string)",
+        "function getAccessCondition(uint256 tokenId) view returns (string)",
+        "function getArchiveURI(uint256 tokenId) view returns (string)",
+        "function safeTransferFrom(address,address,uint256,uint256 amount, bytes data)",
+        "event Minted(address owner,uint256 _tokenId)",
+        "function mint(uint256 amount) returns (address,uint256)",
+        "function tokenCount() public view returns (uint256)",
+
+        "function initializeLIT(uint256 tokenId, string memory ArchiveDescription, string memory LitKey, string memory AccessCondition, string memory ArchiveURI) public",
+
+        // Get the account balance
+        "function balanceOf(address,uint256) view returns (uint)",
+
+
+        // Send some of your tokens to someone else
+        "function transfer(address to, uint amount)",
+
+        // An event triggered whenever anyone transfers to someone else
+        "event Transfer(address indexed from, address indexed to, uint amount)",
+        "function getTokenURI(uint256 tokenId) view returns (string)"
+    ];
+</script>
+
+<body>
+<div><h1>Archive Explorer</h1></div>
+<div>
+    <input type="button" id="hello" value="initializing..." disabled />
+
+    <div id="connection_input">
+        <strong>
+            Contract:
+        </strong>
+        <input placeholder="Contract" id="contractAddress" value="0xfCa4f863b0A4C7D212ECFba038C18efcdAEc70d9"
+            onchange="resetButton()">
+        <span id="expand_details" style="font-size:2.5rem;"></span><br>
+        <strong>
+            Token:
+        </strong>
+        <select id="dropdown" onchange="resetButton()" style="display:none;"></select>
+        <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
+    </div>
+</div>
+<div id="connect_details" style="display:none; flex-direction: column;">
+    <div id="nft-img-div" class="d-none">
+        <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
+    </div>
+    <div id="tokens"></div>
+    <div id="TokenStatus"></div>
+    <span class='formText'>
+        <div>
+            <strong>
+                Chain:
+            </strong>
+            <input type="text" id="chainID" value="mumbai" />
+            <strong>
+                Type:
+            </strong>
+            <input id="tokenType" value="ERC1155" placeholder="Type">
+        </div>
+        <div class="fill-available">
+            <strong>Lit Key:</strong>
+            <input type="text" id="litKey" /><br>
+        </div>
+        <div class="fill-available">
+            <strong>
+                Archive URI: 
+            </strong>
+            <input id="archiveURI">
+        </div>
+        <div class="fill-available">
+            <strong>
+                Archive Description:
+            </strong> 
+            <input id="archiveDescription">
+        </div>
+        <div class="fill-available">
+            <strong>
+                Access Conditions Name:
+            </strong> 
+            <input id="accessConditions"><br>
+        </div>
+</div>
+<script>
+    // Reset button when user changes input
+    function resetButton() {
+        document.getElementById('hello').value = "Connect";
+    }
+
+    // Set img icon to expand token details
+    document.getElementById('expand_details').innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAApElEQVR4nO3VQQrEIBBE0bpFifc/kqC3qWECARcz2hHbQKLQuPxPFAQA3TzYAO0rwMA7GFnPAqAzJJVSugcQQlDO+Yie+zIAq5OXUhRjXAfgj3j9XlwB/BNfAmAj7g5gJz4EONeMuBuAxrgLgBfi0wG8GJ8K4EDcMDABnOIyARzj6gKc42oCFsTVBNRf6veLdYirCXA+uQ1gXc8CYO1gA/TqK/gAazKvc5V6u5oAAAAASUVORK5CYII=">`;
+
+    // fetch url params
+    if (window.location.search.length > 0) {
+        const urlParams = (new URL(document.location)).searchParams;
+        const contractAddress = urlParams.get("contract");
+        console.log(contractAddress);
+        document.getElementById('contractAddress').value = contractAddress
+        const tokenId = urlParams.get("id");
+        console.log(tokenId);
+        document.getElementById('tokenId').value = tokenId;
+    };
+
+    // Create file Icon
+    const fileIcon = document.createElement('span');
+    fileIcon.id = 'fileIcon';
+    fileIcon.innerHTML = `<img alt="File Icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAAXNSR0IArs4c6QAAB39JREFUeF7tnVfIHUUUx3/H3rEFRcUWey/YOzYUVGyoiCh5sD+JImrUmIj6IAiCRPRBg8aCYMFoRAVbxGjsJZhgiRgLtmhsaNQj/2RuuLnfd5OZvbv77eoc+EgeZuaePb+d2Z0z55w1Coi7bwwcCuwPjAbWKDDMSHeZD3wMvAo8b2ZzR0IhS/1Rd98MOAs4Ixh/5dQxGtT+D+AT4HFgkpnNrFu3JADuvh4wBrgQ2Dwo+wPwY92Kl/B76wJrh3G+BR4CbqsbQiqAnYEJwAlB8VeAh4EvSjBInUNsBZwK6Ho6MiIQUgEcBFwHHAbozr8RuN3MfqnTeoP+lrsfAYwDDgjXsVyYDbVDSAXQrbjWzrFmdv+gBqm7fw8AXcd3wBbAKKBWCBnAoofwfYCeCVqWaoWQASwCMBZ4B7iobggZQACgpdTdd6gbQgbQBUDPorohZAA9AOqGkAEMA6BOCBlAHwB1QcgAlgKgDggZwDIAVA0hA4gAUCWEDCASQFUQ/q8ADg7OODkV5cm9yswmxfikyt4nVAbA3eXcktt3pZgLS2izPPAlMMvMfk7ot7ipu+8GjAeOA34HHgl/secaOwJHAXt1+Y7uASaa2UcpOlUCINwl54Qjy7IByHX8DXAnMMXMFqRccFhKdLB0OXA+sGY4UPoc0DFlrKwG6HRQTjyJjjRvAe4ys3mxg1QF4ETgGkB3WlVyg84jip5FuPuewAXA8eEuLkPPyTqwMrNZsYNVBWDbcHSpKb4iUOaBjZYg3W13AFPNTOe6hSTM1FMAHTRtBKxSaKBFs0DHm0/owMrMZsSOUwmAMM23BHYHVgB+i1Uoop2WoK+BD83sp4j2S23i7huEZ5X+LRJg0H28+awe7mb2cqxelQGIVaDt7XpO1zKAuoFmAHVbvOf3MoAMoH1REWUyyzOgTGsWGCsDKGC0MrtkAGVas8BYjQXg7toBa2epjViK/C0HWT8fj7uvOsCONUWPTttl6dMdLdiMfYC7bwgcC+wByHWQIv8ArwNPmdlXnY4B6H7AkcD6KQMO2Fb6yLUgfbQDX0IaOQPcXQ4uOePk8Coib6m/mU3pArBN8GCeBqxeZNAB+rwZ9JGvpxUAjgauBnTHyneTIh6yVq41s6e7ACgf4ZKQHNKJ608Zt2hb6aMwfPl4nmkLAPnbDwR2KnAgozX3XWCamSlqeaG4u0DuGjyXGr8u+atLn+9bASAYTI4+PYiLPAMWmJnW3iESngWpD/ZBYEmPpenTvIfwIFfbtr6NfAi3zYiD6JsBDGK9EvpmACUYcZAhMoBBrFdC3wygBCMOMkRjAYTDbkUa6FW0zaK4o7lmpuzJ4V6Lm/ca6u6KFDgd2KeAM65psLQR0074QTNTbYklpJEzwN1PDr6gXZpmzYL6vBd8QY+2BcDewMXBI9rrNlD4X5mBWgVt2rfbWj3VX+R+mArcOlzAVVNngAKcVIdB7mg5zrrjjxRQW2agVtkAVHqn29uqOM83gJlmpkDe5i9BZVukyeM1cgY02WBl65YBlG3RxPEygESDld08AyjboonjZQCJBiu7eQZQtkUTx2skAHfXe/92wL4VZMj0M5FikPTOPqO3BGXQZ3tAf6lJGH8CHwCzzUzn1c3fB7i7XBDnAsdUkCHTD4AMq4yZe4HJ3TE87q7D/PNCjbjUpEE5415USpSZKVigFQDqSNLrB+KBkCi3uAaou58UfFMCUUTeDr4g1RdtBQB5Q88seMcVMVCnj2aAHGaPmZmqOi4Ud9866KNKv0VmwAuqK2dmKm/WfADhojcBNi1wwYMAkKNvTrfxuyBIH+X1pp5PaAn61MyUHD5EGvkQHsSCbeubAYwwsQwgA8g5Yl1lkJuRHzDCN2WtP5+XoFrNnd+CRtjcLQHg7jrYVml4FTRSXZ1e0bt1cp2fiq2vDdpwYe+/hhSl6WY2pKBTI5cgdz8cuCwkU/QDoHibJok2aMMBUADBNOAmM3uuFTvhEnLEmgRGurQuR0xfWepkSaZu/ZtmfM1UZUmqONQQd0Qjl6DgC1J8jWKC/gsA5vUrjdZYAE27javSJwOoyrKR42YAkYaqqlkGUJVlI8fNACINVVWzDKAqy0aOmwHEG0plblSmODXLXqEo84cLTQ+v281LUYq0SW3N3F3nwariq+otqaUTBOA1VcU1syHfzMwzIAKjuw8aJjOkfE7nZzOAOAAq8nRFwTAZeW1fAq5vjTMuwia1NnH3dULGpr6UlxoXpNDE90PI45Cy9HkGJKIMcaLRvcxMBZv6SgYQbcpqGmYA1dg1etQMINpU1TTMAKqxa/SoGUC0qappmAFUY9foUTOAaFNV07BuAKoFOg5Q2IliZK40s4nVXFrzRw11rM8GLgVGA8qgGW9mKr0cJakf8dEX5CYA8q1IlDnyZIAR9YP/sUaK/tAX9fS1KOWo6Wt6clnMjr3OVADa0o8JpWhUSliimZDyBbpY3drQTlEfigKUzAFuFgQzi7ZHEgD9irvL8CrIJBDyrWSBz/QJQ+BuM9P/oyUZQIAwKixDh4TYn1QHV7SCDW8oR53u9ukhMVCzIEn+Bf9A4qyQ9HF+AAAAAElFTkSuQmCC" />`;
+
+    // Create event listener for expandable details
+    const expandDetails = document.getElementById('expand_details');
+    const connectionDetails = document.getElementById('connect_details');
+    expandDetails.firstChild.addEventListener('click', (e) => { // prevent the click event from bubbling up to the list item
+        e.stopPropagation();
+        // toggle the display of the nested list
+        connectionDetails.style.display = (connectionDetails.style.display === 'none') ? 'flex' : 'none';
+    });
+
+    // Lit node client
+    function litLoaded() {
+        LitJsSdk.litJsSdkLoadedInALIT();
+        document.getElementById("hello").value = 'connect';
+        document.getElementById("hello").disabled = false;
+    }
+</script>
+<script onload='litLoaded()' src="https://jscdn.litgateway.com/index.web.js"></script>
+<script type="module">
+    // import ethers
+    import { ethers } from "/scripts/ethers-5.2.esm.min.js";
+
+    // Verify Lit is loaded
+    async function VerifyLit() {
+        await litJsSdkLoaded();
+
+    }
+    // get chain from input
+    function chain() {
+        return document.getElementById("chainID").value;
+    }
+
+    // new lit node client
+    async function litJsSdkLoaded() {
+        let litNodeClient = new LitJsSdk.LitNodeClient();
+        await litNodeClient.connect();
+        window.litNodeClient = litNodeClient;
+
+    }
+
+    // get auth signature
+    async function getAuthSign() {
+        var authSig = await LitJsSdk.checkAndSignAuthMessage({
+            chain: chain(),
+        });
+        return authSig;
+    }
+
+    // read NFT and populate UI with its metadata
+    async function ReadNFT() {
+        clearInnerHTML();
+        document.getElementById("loading").classList.remove("d-none");
+        document.getElementById('hello').value = "Connecting...";
+        await getAuthSign();
+        await VerifyLit();
+
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const address = document.getElementById("contractAddress").value;
+        const contract = new ethers.Contract(address, contractAbi, signer);
+        const tokenId = document.getElementById("tokenId").value;
+
+
+        // Get image
+        const response = await contract.getTokenURI(tokenId);
+        const json = atob(response.substring(29));
+        const result = JSON.parse(json);
+        document.getElementById("nft-img-div").classList.remove("d-none");
+        if (result.image_data) {
+            document.getElementById("nft-img").src = result.image_data;
+        } else {
+            document.getElementById("nft-img").src = result.image;
+        }
+
+
+        // Get current account in MetaMask
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+        const account = accounts[0]
+        const accountUC = accounts[0].toString().toUpperCase()
+
+
+        // Get owner and creator addresses
+        const owner = (await contract.balanceOf(account, tokenId))
+        const creator = (await contract.tokenIdtoCreator(tokenId)).toString().toUpperCase();
+
+        // Construct text if metamask matches Creator or Owner
+        let v = "Token Access: "
+        if (creator == accountUC) v = v + " [Creator] ";
+        if (owner > 0) v = v + " [Owner] "
+        document.getElementById("TokenStatus").innerHTML = v;
+
+        // Get metadata
+        document.getElementById("litKey").value = await contract.getLITKey(tokenId);
+        document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
+        let archiveURI = await contract.getArchiveURI(tokenId);
+        console.log('before ' + archiveURI);
+        // prepend IPFS gateway if IPFS URI
+        if (archiveURI.split('://')[0] == 'ipfs') {
+            archiveURI = 'https://ipfs.io/ipfs/' + archiveURI.split('://')[1];
+            document.getElementById("archiveURI").value = archiveURI;
+            console.log('after ' + archiveURI);
+        } else {
+            document.getElementById("archiveURI").value = archiveURI;
+        }
+        document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
+
+        ProcessAsset();
+    }
+
+    async function ProcessAsset() {
+        try {
+
+            // get values from UI
+            let URL = document.getElementById("archiveURI").value;
+            let litKey = document.getElementById("litKey").value;
+            let chainID = document.getElementById("chainID").value;
+            let accessData = document.getElementById("accessConditions").value;
+            let accessConditions = JSON.parse(accessData);
+
+            // get encrypted data
+            let response = await axios.get(URL, { responseType: 'arraybuffer' });
+
+            let readBuffer = response.data;
+
+            // check and sign auth message
+            const authSign = await LitJsSdk.checkAndSignAuthMessage({ chain: chainID });
+
+            let litNodeClient = new LitJsSdk.LitNodeClient({ alertWhenUnauthorized: false });
+
+            await litNodeClient.connect();
+
+            const SYMM_KEY_ALGO_PARAMS = {
+                name: "AES-CBC",
+                length: 256
+            };
+            const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
+            console.log(unlockedKey);
+            const unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
+
+
+
+
+            // Decrypt data
+            let decryptedBlobArrayBuffer = await LitJsSdk.decryptWithSymmetricKey(new Blob([readBuffer]), unlockedSymmKey);
+
+            Loaddata(decryptedBlobArrayBuffer, readBuffer);
+
+        } catch (ex) {
+            console.log(ex);
+            alert(ex.message);
+            console.log(ex.stack);
+        }
+    }
+
+    // event listener for main button
+    document.querySelector('#hello').addEventListener('click', ReadNFT);
+
+
+    function arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+</script>
+
+
+<div id="container">
+    <div id="loading" class="d-none receiptFont">Loading...</div>
+
+    <div class="content">
+        <div id="content_metadata">
+            <div id="content_title"></div>
+            <div id="timestamp"></div>
+            <div id="content_details"></div>
+            <div id="content_hashes">
+                <div id="CID"></div>
+                <div id="EncryptedArchiveHash"></div>
+                <div id="content_hash"></div>
+            </div>
+
+            <div id="validated_signatures"></div>
+        </div>
+
+        <div id="custom_attributes"></div>
+        <div id="download_links"></div>
+    </div>
+    <div id="image_div" class="d-none">
+        <div id="proofmode_text"></div>
+    </div>
+    <div id="webrecorder_container" class="d-none">
+        <div id="webrecorder"></div>
+        <div id="wacz" class="d-none"></div>
+    </div>
+</div>
+
+
+<script>
+
+    // load hash library and set containers for UI content
+    const Hash = require('ipfs-only-hash');
+    const svgArrow = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1.40905 8.91662L9.22925 1.09642M9.22925 1.09642L9.26519 7.5539M9.22925 1.09642L2.67349 1.1329" stroke="#FFF9F2" stroke-width="1.23961"/>
+                </svg>`;
+    const contentHash = document.getElementById('content_hash');
+    const eContentHash = document.getElementById('EncryptedArchiveHash');
+    const titleDiv = document.getElementById('content_title');
+    const cidDiv = document.getElementById('CID');
+    const contentdetailsDiv = document.getElementById('content_details');
+    const timestampDiv = document.getElementById('timestamp');
+    const customDiv = document.getElementById('custom_attributes');
+    const linksDiv = document.getElementById('download_links');
+    const waczTextContainer = document.getElementById('webrecorder');
+    const imageDiv = document.getElementById('image_div');
+    const proofDiv = document.getElementById('proofmode_text');
+    const signatureDiv = document.getElementById('validated_signatures');
+    
+    // Create copy to clipboard button
+    function createCopyButton(id) {
+        const tooltipDiv = document.createElement('div');
+        tooltipDiv.className = 'tooltip';
+        const copyButton = document.createElement('button');
+        tooltipDiv.appendChild(copyButton);
+        copyButton.className = 'btn';
+        copyButton.innerHTML = `<svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-copy js-clipboard-copy-icon m-2">
+                <path fill-rule="evenodd" d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z"></path><path fill-rule="evenodd" d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z"></path>
+            </svg>`;
+        const tooltipText = document.createElement('span');
+        copyButton.appendChild(tooltipText);
+        tooltipText.className = 'tooltiptext';
+        tooltipText.id = id + '_Tooltip';
+        tooltipText.innerHTML = 'Copy to clipboard';
+        copyButton.setAttribute('onclick', 'copyToClipboard("' + id + '")');
+        copyButton.setAttribute('onmouseout', 'tooltipFunction("' + id + '_Tooltip")');
+        return tooltipDiv;
+    }
+
+    // Copy to clipboard function
+    function copyToClipboard(textID) {
+
+        var copyText = document.getElementById(textID);
+        // copyText.select();
+        // copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.textContent);
+        var tooltip = document.getElementById(textID + '_Tooltip');
+        tooltip.innerHTML = "";
+        tooltip.innerHTML = "Copied " + copyText.textContent;
+    }
+
+    // Tooltip function to show content was copied
+    function tooltipFunction(tooltipID) {
+        var tooltip = document.getElementById(tooltipID);
+        tooltip.innerHTML = "Copy to clipboard";
+    }
+
+
+
+    // create div from key and value, add ID to the div
+    function createDiv(customID, name, data) { // create a new div element
+        const div = document.createElement('div');
+        // add divdata class to the div
+        div.classList.add('divdata');
+
+        // add custom id for the div
+        div.id = customID;
+
+        // add the name and data to the div
+        div.innerHTML = `<strong>${name.toUpperCase()
+            }</strong><br> ${data}`;
+
+        // return the div
+        return div;
+    }
+
+    // function to sha256 hash 
+    async function digestMessage(input) {
+        try {
+
+            const hashBuffer = await crypto.subtle.digest('SHA-256', input);           // hash the input
+            const hashArray = Array.from(new Uint8Array(hashBuffer));                     // convert buffer to byte array
+            const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+            return hashHex;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    async function Loaddata(BA, EA) { // Load data from decrypted archive
+
+        JSzip = new JSZip();
+
+        var proofs = {}
+        var meta_data_recorder = {}
+        var meta_data_content = {}
+        var proofmode_file = "";
+
+
+        // IPFS Hash 
+        const aUint8array = new Uint8Array(EA);
+        const eaBuffer = new Buffer(EA);
+        ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
+        CIDhash = await Hash.of(eaBuffer, ipfsOptions);
+
+
+
+        // hash the encrypted archive and add content hash
+        digestMessage(EA).then((digestHex) => {
+            const eContentHashSpan = document.createElement('span');
+            eContentHash.innerHTML = `<strong>Encrypted Archive Hash:</strong> `;
+            eContentHashSpan.className = 'dataID';
+            eContentHashSpan.id = 'encryptedcontentHashSpan';
+            eContentHashSpan.textContent = digestHex.toUpperCase();
+            eContentHash.appendChild(eContentHashSpan);
+            eContentHash.appendChild(createCopyButton('encryptedcontentHashSpan'));
+        });
+
+
+        // Load array buffer from response, and read it with JSZip
+        const target_zip = await JSZip.loadAsync(BA);
+
+
+
+
+        // Hash the decrypted archive and add content hash to UI
+        contentHash.innerHTML = `<strong>Decrypted Archive Hash:</strong> `;
+        const contentHashSpan = document.createElement('span');
+        contentHashSpan.className = 'dataID';
+        contentHashSpan.id = 'decryptedcontentHashSpan';
+        // hash the file and add content hash
+        const decryptedBuffer = new Buffer(BA);
+        digestMessage(decryptedBuffer).then((digest) => {
+            console.log('decryptedBuffer hash: ' + digest);
+            contentHashSpan.textContent = digest.toUpperCase();
+            contentHash.appendChild(contentHashSpan);
+            contentHash.appendChild(createCopyButton('decryptedcontentHashSpan'));
+        });
+
+        // container for links
+        // create div for each link category 
+        const metadataDiv = document.createElement('div');
+        const recorderDiv = document.createElement('div');
+        const filesDiv = document.createElement('div');
+        // insert text in download link div
+        linksDiv.innerHTML = `<strong>Files</strong>`;
+        const downloadIconFiles = document.createElement('img');
+        downloadIconFiles.classList.add('downloadIcon');
+        // insert expand icon
+        const downloadIconSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAABl0lEQVR4nO2ZPU7DMBSAQyUquAUMwFoQVyt/Q1SGMsPCRLlCDwGnKCBRZhBDB1Sp0oeiupKpGhLbL7YL/rbWeX7vq1PHesmyRCJRCbANXALPwAxzpsA10MoCFf+IDHfeJZj/8pL4lWB+2yzoApuG8WEl+HnPty3iw64EGq7xwMC7BLICG8DtCqmWfOUrCpCIL5G4b0xCWsC7BA0IeJWgIQFvErgL/LoNA61GdycBAf1BeOpdAneBHvbcxCDgchicBhdQc2wBOfBkehzPYhAImpP/KgAcAG/AK7DnI6e0wIUWer6OAj0ttOcj50qSwJy0AtagUXHdPjAGXoDD5f8AcKTGxlW7EoEETrRLP4Ch9nmovlvQjVFgd6nIMt6BnegECoCOKrCMT+A4q4BQAhUStYoPLlAiUbv4KARUXLETjdQRuuMjp9VkwBXwhTlFTN8mpxE1ugoT7JkEFVDj/bVdgaZAWMCpvW6Rr63lm0lMWNnXES7+TMs3kpjUpa/jSh7bSz4THop2jLOAa1/HkJnKkYsVn0j8cb4BOVs1DlbdwS4AAAAASUVORK5CYII=";
+        downloadIconFiles.src = downloadIconSrc;
+        linksDiv.appendChild(downloadIconFiles);
+
+        // Loop through all the files in the zip
+        for (const [key, value] of Object.entries(target_zip.files)) { // and create a link for each file
+            target_zip.file(key).async("blob").then(function (content) {
+                const a = document.createElement("a");
+                a.download = key;
+                a.href = URL.createObjectURL(content);
+                a.classList.add('receiptFont');
+                console.log('key: ' + key);
+                if (key.endsWith('.txt')) {
+                    console.log('detected text file')
+                    a.innerHTML = 'Text';
+                    a.classList.add('receiptFont');
+                    appendText(content);
+                    filesDiv.insertAdjacentElement('afterbegin', a);
+                }
+                if (key.endsWith('.jpg') || key.endsWith('.png')) {
+                    console.log('sending image blob to showSingleImage')
+                    a.innerHTML = 'Image';
+                    a.classList.add('receiptFont');
+                    filesDiv.insertAdjacentElement('afterbegin', a);
+                    if (key.endsWith('.jpg')) {
+                        showSingleImage(content, 'jpg');
+                    }
+                    if (key.endsWith('.png')) {
+                        showSingleImage(content, 'png');
+                    }
+                } else if (value.name.endsWith('.zip') || value.name.endsWith('.wacz')) {
+                    a.innerHTML = 'Content';
+                    a.classList.add('receiptFont');
+                    filesDiv.insertAdjacentElement('afterbegin', a);
+                } else if (value.name.endsWith('meta-content.json')) {
+                    a.innerHTML = 'Content Metadata';
+                    a.classList.add('receiptFont');
+                    metadataDiv.insertAdjacentElement('afterbegin', a);
+                } else if (value.name.endsWith('meta-recorder.json')) {
+                    a.innerHTML = 'Recorder Metadata';
+                    a.classList.add('receiptFont');
+                    recorderDiv.insertAdjacentElement('afterbegin', a)
+                } else if (value.name.endsWith('.ots')) {
+                    if ((value.name.endsWith('.zip.ots') || value.name.endsWith('.png.ots')) || (value.name.endsWith('.jpg.ots')) || value.name.endsWith('.wacz.ots') || value.name.endsWith('.txt.ots')) {
+                        a.innerHTML = `<img class="otsIMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABT0lEQVR4nO2UTUoDMRSAs2pRBLvvFboQcaH2EoILC17BKl15hSlYvIsbD2D96UovYUVEkepGED55kMUYk5mkmQwW+sGDIe9l3jcvM6PUkv8OsA1cADMdl8BOXc33gC/+8g3sp26+Drzi5g1opRToUc5hSoETD4HTlAIHHgI9y74mcAzcAZ865LovuRCBVeC9oLnk1ow9beChYM+91IRInBXcbGh5crP5LtC1SPhNAtgsENgwamXsv8jlTI5CjsHFilE7CRC49RIQXN2VAfBhlDznciYzlVjgBejo9a26BCa59EivdWQSdR1BP5eWX/i5ngRzv4SBAk39iZUhNQ3lC5DZwlHbLpEI+xHNgzydjFjOWb+YEjd6rVG2cQhMCedRT8Z/tBaBjHiyGIFpBQJPMQKVsNACA9cnFxADtdAA1xHTH1chMI4QuKpkCktUzfwAC0/RPzsIzooAAAAASUVORK5CYII=">` + '.ots';
+                        filesDiv.insertAdjacentElement('beforeend', a)
+                    }
+                    if (value.name.endsWith('meta-content.json.ots')) {
+                        a.innerHTML = `<img class="otsIMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABT0lEQVR4nO2UTUoDMRSAs2pRBLvvFboQcaH2EoILC17BKl15hSlYvIsbD2D96UovYUVEkepGED55kMUYk5mkmQwW+sGDIe9l3jcvM6PUkv8OsA1cADMdl8BOXc33gC/+8g3sp26+Drzi5g1opRToUc5hSoETD4HTlAIHHgI9y74mcAzcAZ865LovuRCBVeC9oLnk1ow9beChYM+91IRInBXcbGh5crP5LtC1SPhNAtgsENgwamXsv8jlTI5CjsHFilE7CRC49RIQXN2VAfBhlDznciYzlVjgBejo9a26BCa59EivdWQSdR1BP5eWX/i5ngRzv4SBAk39iZUhNQ3lC5DZwlHbLpEI+xHNgzydjFjOWb+YEjd6rVG2cQhMCedRT8Z/tBaBjHiyGIFpBQJPMQKVsNACA9cnFxADtdAA1xHTH1chMI4QuKpkCktUzfwAC0/RPzsIzooAAAAASUVORK5CYII=">` + '.ots';
+                        metadataDiv.insertAdjacentElement('beforeend', a)
+                    }
+                    if (value.name.endsWith('meta-recorder.json.ots')) {
+                        a.innerHTML = `<img class="otsIMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAABT0lEQVR4nO2UTUoDMRSAs2pRBLvvFboQcaH2EoILC17BKl15hSlYvIsbD2D96UovYUVEkepGED55kMUYk5mkmQwW+sGDIe9l3jcvM6PUkv8OsA1cADMdl8BOXc33gC/+8g3sp26+Drzi5g1opRToUc5hSoETD4HTlAIHHgI9y74mcAzcAZ865LovuRCBVeC9oLnk1ow9beChYM+91IRInBXcbGh5crP5LtC1SPhNAtgsENgwamXsv8jlTI5CjsHFilE7CRC49RIQXN2VAfBhlDznciYzlVjgBejo9a26BCa59EivdWQSdR1BP5eWX/i5ngRzv4SBAk39iZUhNQ3lC5DZwlHbLpEI+xHNgzydjFjOWb+YEjd6rVG2cQhMCedRT8Z/tBaBjHiyGIFpBQJPMQKVsNACA9cnFxADtdAA1xHTH1chMI4QuKpkCktUzfwAC0/RPzsIzooAAAAASUVORK5CYII=">` + '.ots';
+                        recorderDiv.insertAdjacentElement('beforeend', a)
+                    }
+                } else if (value.name.endsWith('.authsign')) {
+                    if ((value.name.endsWith('.zip.authsign') || value.name.endsWith('.png.authsign')) || (value.name.endsWith('.wacz.authsign')) || value.name.endsWith('.jpg.authsign') || value.name.endsWith('.txt.authsign')) {
+                        a.innerHTML = `<img class="authsignIMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR4nO2WP0hbURSHYxUrwWLBTRxERGnR0gxBxEVEsJBVVxWEuOtQCm4OUgXBwaHuCq3uLjo46WIHRRREDaVBoTFYqNSh+MnBE7heTnxJfOmUHzx43PN757v33H8vEqmoov8loBaYBA6BG2AfmACqSsxXAywDf4A9IGaZXgFb2FoqETzi5dm3TGsaTAMJIAoMAr+1faAE8DzwzwFnfcOwBq6BNi/2UWMrJY66UUe+/iiHzB9wpMmTxoctGssUCYwDHU8ZejXxD1kMeTw78hQJ3tW8x8BnoNuaB9FcMYkDoK3AnbewVnzTtgY+hAieNnZGwjfJKhY1hwg+8KBXckb4pr8arAsJ+s4Y7RfLeKvB1yGBZw1wn2U81+D7EKCyNc88aBp4YZm/qeGTEZODJQtsAi8LAPcYo13IZ86dWimg3mmPOfMvGi0AvGiA4/nM1c4q3ACagE7gp7blSrcaAJU8Fx70JKinAsoYvZU9/sbZEklNLp3p8nL0G9/PBFUpd9qsAr+ASy1bVGNyl/r67i4a5zJx9TYQXMCBn9Lyj+m7aMrxjPvVehbUEjDkAHa1rd2dW7nVIuUQD79Ep/LX4rRJ+b8CDWWBVlRRJED3qRJk7Nkre9AAAAAASUVORK5CYII=">` + '.authsign';
+                        filesDiv.insertAdjacentElement('beforeend', a);
+                    }
+                    if (value.name.endsWith('meta-content.json.authsign')) {
+                        a.innerHTML = `<img class="authsignIMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR4nO2WP0hbURSHYxUrwWLBTRxERGnR0gxBxEVEsJBVVxWEuOtQCm4OUgXBwaHuCq3uLjo46WIHRRREDaVBoTFYqNSh+MnBE7heTnxJfOmUHzx43PN757v33H8vEqmoov8loBaYBA6BG2AfmACqSsxXAywDf4A9IGaZXgFb2FoqETzi5dm3TGsaTAMJIAoMAr+1faAE8DzwzwFnfcOwBq6BNi/2UWMrJY66UUe+/iiHzB9wpMmTxoctGssUCYwDHU8ZejXxD1kMeTw78hQJ3tW8x8BnoNuaB9FcMYkDoK3AnbewVnzTtgY+hAieNnZGwjfJKhY1hwg+8KBXckb4pr8arAsJ+s4Y7RfLeKvB1yGBZw1wn2U81+D7EKCyNc88aBp4YZm/qeGTEZODJQtsAi8LAPcYo13IZ86dWimg3mmPOfMvGi0AvGiA4/nM1c4q3ACagE7gp7blSrcaAJU8Fx70JKinAsoYvZU9/sbZEklNLp3p8nL0G9/PBFUpd9qsAr+ASy1bVGNyl/r67i4a5zJx9TYQXMCBn9Lyj+m7aMrxjPvVehbUEjDkAHa1rd2dW7nVIuUQD79Ep/LX4rRJ+b8CDWWBVlRRJED3qRJk7Nkre9AAAAAASUVORK5CYII=">` + '.authsign';
+                        metadataDiv.insertAdjacentElement('beforeend', a);
+                    }
+                    if (value.name.endsWith('meta-recorder.json.authsign')) {
+                        a.innerHTML = `<img class="authsignIMG" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAABzUlEQVR4nO2WP0hbURSHYxUrwWLBTRxERGnR0gxBxEVEsJBVVxWEuOtQCm4OUgXBwaHuCq3uLjo46WIHRRREDaVBoTFYqNSh+MnBE7heTnxJfOmUHzx43PN757v33H8vEqmoov8loBaYBA6BG2AfmACqSsxXAywDf4A9IGaZXgFb2FoqETzi5dm3TGsaTAMJIAoMAr+1faAE8DzwzwFnfcOwBq6BNi/2UWMrJY66UUe+/iiHzB9wpMmTxoctGssUCYwDHU8ZejXxD1kMeTw78hQJ3tW8x8BnoNuaB9FcMYkDoK3AnbewVnzTtgY+hAieNnZGwjfJKhY1hwg+8KBXckb4pr8arAsJ+s4Y7RfLeKvB1yGBZw1wn2U81+D7EKCyNc88aBp4YZm/qeGTEZODJQtsAi8LAPcYo13IZ86dWimg3mmPOfMvGi0AvGiA4/nM1c4q3ACagE7gp7blSrcaAJU8Fx70JKinAsoYvZU9/sbZEklNLp3p8nL0G9/PBFUpd9qsAr+ASy1bVGNyl/r67i4a5zJx9TYQXMCBn9Lyj+m7aMrxjPvVehbUEjDkAHa1rd2dW7nVIuUQD79Ep/LX4rRJ+b8CDWWBVlRRJED3qRJk7Nkre9AAAAAASUVORK5CYII=">` + '.authsign';
+                        recorderDiv.insertAdjacentElement('beforeend', a);
+                    }
+                }
+            });
+
+            linksDiv.appendChild(filesDiv);
+
+            linksDiv.appendChild(metadataDiv);
+
+            linksDiv.appendChild(recorderDiv);
+
+            document.getElementById("loading").classList.add("d-none");
+            document.getElementById('hello').value = "Connected";
+            // Is this file a proof
+            if (key.indexOf("proofs/") > -1) {
+                var proof = key.substr(6);
+                proofs[key] = 1;
+            }
+
+            // extract the hash from the file name
+            if (key.indexOf("-") == -1 && key.indexOf("/") == -1) {
+
+
+                hash = key.substr(0, key.indexOf('.'));
+                console.log('hash: ' + hash);
+
+
+            }
+
+            // Is it metadata that is not a proof
+            if (key.indexOf("-") > -1 && key.indexOf("/") == -1) { // is it meta-content file
+                if (key.indexOf("-meta-content") > -1) { // Read content of file from ZIP
+                    content = target_zip.file(key).async("string").then(function (meta_content) {
+                        meta_data_content = JSON.parse(meta_content);
+
+                        // if content contains contentMetadata, and proofmode tag exist
+                        if (("contentMetadata" in meta_data_content && "proofmode" in meta_data_content.contentMetadata.private) || ("private" in meta_data_content && "proofmode" in meta_data_content.private)) { // Get asset filename
+                            console.log('detected proofmode file - opening proofmode');
+                            console.log('key: ' + key);
+                            proofmode_file = key.substr(0, key.indexOf('-')) + ".zip";
+                            console.log('proofmode_file: ' + proofmode_file);
+                            // Read proofmode zip file from
+                            proofmode = target_zip.file(proofmode_file).async("arraybuffer").then(function (proofmode_zip_file) { // Parse proofmode data
+                                setProofmodeImage(proofmode_zip_file);
+                            });
+                        }
+
+                        // if content contains contentMetadata, and wacz tag exist
+                        if ("contentMetadata" in meta_data_content && meta_data_content.contentMetadata.mime == "application/wacz") {
+                            console.log('detected wacz file - opening wacz')
+                            waczTextContainer.innerHTML = 'Webrecorder';
+                            wacz_file = key.substr(0, key.indexOf('-')) + ".wacz";
+                            console.log(wacz_file);
+                            wacz_content = target_zip.file(wacz_file).async("arraybuffer").then(function (waczreplay) {
+                                openWacz(waczreplay);
+                            });
+                        }
+                        // Load data
+                        loadMetaDataUI(meta_data_content);
+                    });
+                }
+
+                if (key.indexOf("-") > -1 && key.indexOf("/") == -1) {
+                    if (key.indexOf("-meta-recorder") > -1) {
+                        content = target_zip.file(key).async("string").then(function (content) {
+                            meta_data_content = JSON.parse(content);
+                            loadMetaDataUI(meta_data_content);
+                        });
+                    }
+                }
+
+            }
+
+
+
+        }
+    }
+    function loadMetaDataUI(content) {
+        console.log(content);
+        // Get divs
+        const parentDiv = document.getElementById('content_metadata');
+
+
+        // CONTENT METADATA
+        if ("name" && "description" in content) {
+            content["contentMetadata"] = content;
+            console.log('new content; ' + content);
+        }
+
+        if ("contentMetadata" in content) { // NAME & DESCRIPTION
+            titleDiv.appendChild(createDiv("nameDesc", content.contentMetadata.name, content.contentMetadata.description));
+
+
+            // TIMESTAMP
+            timestampDiv.innerHTML += `<strong>Date Created:</strong> ` + content.contentMetadata.timestamp;
+
+
+            // AUTHOR
+            contentdetailsDiv.innerHTML += `<strong>Author:</strong> <a href="` + content.contentMetadata.author.identifier + `" target="_blank">` + content.contentMetadata.author.name + `</a>`;
+
+            // MIME TYPE
+            contentdetailsDiv.innerHTML += `<br><strong>Mime Type:</strong> ` + content.contentMetadata.mime;
+
+            // CID HASH
+            cidDiv.innerHTML += `<strong>CID:</strong> `;
+            const cidValueContainer = document.createElement('span');
+            cidValueContainer.id = 'CIDvalue';
+            cidValueContainer.className = 'dataID';
+            cidValueContainer.innerHTML = CIDhash.toUpperCase();
+            cidDiv.appendChild(cidValueContainer);
+            cidDiv.appendChild(createCopyButton('CIDvalue'));
+
+
+            // VALIDATED SIGNATURES
+            if (content.contentMetadata.validatedSignatures !== undefined) {
+                signatureDiv.innerHTML += `<strong>Validated Root of Trust</strong> `;
+                signatureDiv.append(fileIcon);
+                const detailsDiv = document.createElement('div');
+                detailsDiv.id = 'validated_signatures_details';
+                detailsDiv.innerHTML = content.contentMetadata.validatedSignatures[0].algorithm + ' (' + content.contentMetadata.validatedSignatures[0].provider + ')';
+
+                signatureDiv.appendChild(detailsDiv);
+                const json = JSON.stringify(content.contentMetadata.validatedSignatures);
+                const signatureUrl = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+                signatureDiv.onclick = function () {
+                    window.open(signatureUrl, '_blank', 'height=500,width=500');
+                }
+
+            }
+
+
+            // Custom Attributes : Private & Extras
+            if (content.contentMetadata.private !== undefined || content.contentMetadata.extras !== undefined) {
+                console.log('custom attributes found')
+
+                customDiv.innerHTML = `<strong>Custom Attributes:</strong> `;
+                const buttonsDiv = document.createElement('div');
+                buttonsDiv.className = "btn-group";
+                customDiv.appendChild(buttonsDiv);
+
+                if (content.contentMetadata.private) {
+                    const privateButton = document.createElement('button');
+                    privateButton.textContent = "Private";
+                    privateButton.className = "jsonButton";
+                    const json = JSON.stringify(content.contentMetadata.private);
+                    const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+                    privateButton.onclick = function () {
+                        window.open(url, '_blank', 'height=500,width=500');
+                    }
+                    buttonsDiv.appendChild(privateButton);
+                }
+
+                if (Object.keys(content.contentMetadata.extras).length !== 0) {
+                    console.log('typeof ' + typeof content.contentMetadata.extras)
+                    console.log('extras: ' + content.contentMetadata.extras)
+                    const extrasButton = document.createElement('button');
+                    extrasButton.textContent = "Public";
+                    extrasButton.className = "jsonButton";
+                    const json = JSON.stringify(content.contentMetadata.extras);
+                    const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+                    extrasButton.onclick = function () {
+                        window.open(url, '_blank', 'height=500,width=500');
+                        //URL.revokeObjectURL(url);
+                    }
+                    buttonsDiv.appendChild(extrasButton);
+                }
+
+            }
+            // check if proofmode is present
+            if ("proofmode" in content.contentMetadata.private) {
+                console.log('proofmode found');
+                imageDiv.appendChild(proofDiv);
+                proofDiv.innerHTML += 'ProofMode';
+            }
+            if (content.contentMetadata.private.starlingCapture !== undefined) {
+                imageDiv.appendChild(proofDiv);
+                console.log('starlingCapture found');
+                proofDiv.innerHTML += 'Starling Capture';
+            }
+
+            const mainContainer = document.getElementById("container");
+            mainContainer.classList.remove("d-none");
+            mainContainer.classList.add("d-flex");
+        }
+
+    }
+    async function openWacz(wacz_content) {
+
+        blob = new Blob([new Uint8Array(wacz_content)], { type: 'application/wacz' });
+        var url = URL.createObjectURL(blob);
+        x = document.getElementById("wacz");
+        y = document.getElementById("webrecorder_container");
+        x.classList.remove("d-none");
+        y.classList.remove("d-none");
+        x.innerHTML = '<replay-web-page source="' + url + '" embed="replay-with-info" id="wacz2"></replay-web-page>';
+    }
+
+    async function setProofmodeImage(content) {
+        // image div is doc by default
+        console.log('setProofmodeImage called');
+        doc = document.getElementById("image_div");
+
+        // check if content is a zip file
+
+
+        JSzip = new JSZip();
+        await JSZip.loadAsync(content).then(function (zip) {
+
+
+            for (const [key, value] of Object.entries(zip.files)) {
+                if (key.substring(key.length - 3).toLowerCase() == "jpg") {
+
+                    content = zip.file(key).async("arraybuffer").then(function (content) {
+                        jpg = "data:image/jpeg;base64," + arrayBufferToBase64(content);
+                        image = document.createElement("img");
+                        image.className = "image_view";
+                        image.src = jpg;
+                        doc.classList.remove("d-none");
+
+                        doc.appendChild(image);
+                    });
+                }
+            }
+        });
+    };
+    async function appendText(content) {
+        doc = document.getElementById("image_div");
+        var reader = new FileReader();
+        reader.readAsText(content);
+        reader.onload = function () {
+            var text = reader.result;
+            doc.classList.remove("d-none");
+            doc.innerHTML = text;
+        }
+    }
+
+    async function showSingleImage(content, type) {
+        doc = document.getElementById("image_div");
+        // if it is not a zip file, display the image
+        console.log('not a zip file')
+        console.log('content and type: ' + content + ' ' + typeof content);
+        var content_keys = Object.keys(content);
+        console.log('content keys: ' + content_keys);
+        for (const key in content_keys) {
+            console.log('key: ' + key + ' value: ' + content[key]);
+        }
+
+        let reader = new FileReader();
+        reader.readAsDataURL(content); // converts the blob to base64 and calls onload
+
+        reader.onload = function () {
+            console.log('reader result: ' + reader.result);
+            console.log('reader.result type: ' + typeof reader.result);
+            if (type === "jpg") {
+                imageData = "data:image/jpeg;base64," + reader.result.split(',')[1];
+            }
+            else if (type === "png") {
+                imageData = "data:image/png;base64," + reader.result.split(',')[1];
+            }
+            image = document.createElement("img");
+            image.className = "image_view";
+            image.src = imageData;
+            doc.classList.remove("d-none");
+            doc.appendChild(image);
+        };
+
+    }
+
+    function arrayBufferToBase64(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+
+
+
+    function clearInnerHTML() {
+        titleDiv.innerHTML = "";
+        timestampDiv.innerHTML = "";
+        contentdetailsDiv.innerHTML = "";
+        cidDiv.innerHTML = "";
+        contentHash.innerHTML = "";
+        eContentHash.innerHTML = "";
+        customDiv.innerHTML = "";
+        linksDiv.innerHTML = "";
+        imageDiv.innerHTML = "";
+        imageDiv.className = "d-none";
+        proofDiv.innerHTML = "";
+        waczTextContainer.innerHTML = "";
+        signatureDiv.innerHTML = "";
+        document.getElementById("wacz").className = "d-none";
+        document.getElementById("webrecorder_container").className = "d-none";
+    }
+
+</script>
+
+</body>
+
+</html>
