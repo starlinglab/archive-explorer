@@ -1,0 +1,54 @@
+name: Publish IPFS
+on:
+  push:
+    branches:
+      - development
+env:
+  WEB3Token: ${{ secrets.WEB3APITOKEN }}
+  HOSTNAME: ${{ secrets.HOSTNAME_DEV }}
+  HEPASSWORD: ${{ secrets.HEPASSWORD_DEV }}
+  DOTOKEN: ${{ secrets.DOTOKEN }}
+  DOID: ${{ secrets.DOID }}
+  ROOT_PATH: /
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16.x]
+        
+    steps:
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+      # Checks-out your repository under $GITHUB_WORKSPACE, 
+      # so your workflow can access it
+    - name: Checkout repo
+      uses: actions/checkout@master
+      
+    - run: |
+        npm i --global ipfs-car
+        ipfs-car --pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrapWithDirectory false --verbose --output /tmp/output.car
+        echo Posting to WEB3
+        curl -X POST \
+          'https://api.web3.storage/car' \
+          -H 'accept: application/json' \
+          -H "Authorization: Bearer $WEB3Token" \
+          -H 'Content-Type: application/vnd.ipld.car' \
+          -o '/tmp/res.txt' \
+          --data-binary '@/tmp/output.car' 
+        echo Post Complete
+        cat /tmp/res.txt
+        echo Reading IPFS CID
+        IPFS=$(cat /tmp/res.txt | jq .cid | tr -d \"_)
+        echo "Pinning $IPFS"
+        if [ -n "$HEPASSWORD" ]; then
+          curl -4 "https://_dnslink.$HOSTNAME:$HEPASSWORD@dyn.dns.he.net/nic/update" -d "hostname=_dnslink.$HOSTNAME" -d "txt=dnslink=/ipfs/$IPFS"
+        fi
+        if [ -n "$DOTOKEN" ]; then
+          curl -s -X PATCH -H 'Content-Type: application/json' -H "Authorization: Bearer $DOTOKEN" -d "{\"data\":\"dnslink=/ipfs/$IPFS\"}" "https://api.digitalocean.com/v2/domains/$HOSTNAME/records/$DOID" > /dev/null
+        fi
