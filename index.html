@@ -151,6 +151,17 @@
 </script>
 <script onload='litLoaded()' src="https://jscdn.litgateway.com/index.web.js"></script>
 <script type="module">
+    async function updateState(state, percent) {
+        document.getElementById("loading").innerHTML="Loading... (" + state + ")";
+        let count=20*(percent / 100);
+        let g=" ";
+        for (var i=0; i<count; i++) 
+            g=g + ", darkred"            
+        for (var i=count; i<20; i++) 
+            g=g + ", black"
+        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
+    }
+
     // import ethers
     import { ethers } from "./scripts/ethers-5.2.esm.min.js";
 
@@ -184,7 +195,10 @@
     async function ReadNFT() {
         clearInnerHTML();
         document.getElementById("loading").classList.remove("d-none");
+        updateState("Init",0);
         document.getElementById('hello').value = "Connecting...";
+
+        updateState("Authenticating with LIT",5);
         await getAuthSign();
         await VerifyLit();
 
@@ -194,7 +208,7 @@
         const address = document.getElementById("contractAddress").value;
         const contract = new ethers.Contract(address, contractAbi, signer);
         const tokenId = document.getElementById("tokenId").value;
-
+        updateState("Reading access token uri" + tokenId,10);
 
         // Get image
         const response = await contract.getTokenURI(tokenId);
@@ -208,6 +222,7 @@
         }
 
 
+        updateState("Reading access token ownership",15);
         // Get current account in MetaMask
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         const account = accounts[0]
@@ -224,6 +239,7 @@
         if (owner > 0) v = v + " [Owner] "
         document.getElementById("TokenStatus").innerHTML = v;
 
+        updateState("Reading access token metadata",20);
         // Get metadata
         document.getElementById("litKey").value = await contract.getLITKey(tokenId);
         document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
@@ -253,10 +269,12 @@
             let accessConditions = JSON.parse(accessData);
 
             // get encrypted data
+            updateState("Downloading archive",25);
             let response = await axios.get(URL, { responseType: 'arraybuffer' });
 
             let readBuffer = response.data;
 
+            updateState("Decrypting - LIT Auth",50);
             // check and sign auth message
             const authSign = await LitJsSdk.checkAndSignAuthMessage({ chain: chainID });
 
@@ -268,13 +286,12 @@
                 name: "AES-CBC",
                 length: 256
             };
+
+            updateState("Decrypting - LIT key decryption",55);
             const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
-            console.log(unlockedKey);
             const unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
 
-
-
-
+            updateState("Decrypting - Content",60);
             // Decrypt data
             let decryptedBlobArrayBuffer = await LitJsSdk.decryptWithSymmetricKey(new Blob([readBuffer]), unlockedSymmKey);
 
@@ -334,6 +351,16 @@
 
 
 <script>
+    async function updateState(state,percent) {
+        document.getElementById("loading").innerHTML="Loading... (" + state + ")";
+        let count=20*(percent / 100);
+        let g=" ";
+        for (var i=0; i<count; i++) 
+            g=g + ", darkred"            
+        for (var i=count; i<20; i++) 
+            g=g + ", black"
+        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
+    }
 
     // load hash library and set containers for UI content
     const Hash = require('ipfs-only-hash');
@@ -433,7 +460,7 @@
         var meta_data_content = {}
         var proofmode_file = "";
 
-
+        updateState("Processing - Generating IPFS CID", 80);
         // IPFS Hash 
         const aUint8array = new Uint8Array(EA);
         const eaBuffer = new Buffer(EA);
@@ -441,7 +468,7 @@
         CIDhash = await Hash.of(eaBuffer, ipfsOptions);
 
 
-
+        updateState("Processing - Generating SHA256",85);
         // hash the encrypted archive and add content hash
         digestMessage(EA).then((digestHex) => {
             const eContentHashSpan = document.createElement('span');
@@ -454,12 +481,13 @@
         });
 
 
+        updateState("Processing - Reading zip",90);
         // Load array buffer from response, and read it with JSZip
         const target_zip = await JSZip.loadAsync(BA);
 
 
 
-
+        updateState("Processing - Generating SHA256-2",95);
         // Hash the decrypted archive and add content hash to UI
         contentHash.innerHTML = `<strong>Decrypted Archive Hash:</strong> `;
         const contentHashSpan = document.createElement('span');
@@ -488,6 +516,7 @@
         downloadIconFiles.src = downloadIconSrc;
         linksDiv.appendChild(downloadIconFiles);
 
+        updateState("Processing - Loading Image",100);
         // Loop through all the files in the zip
         for (const [key, value] of Object.entries(target_zip.files)) { // and create a link for each file
             target_zip.file(key).async("blob").then(function (content) {
@@ -563,6 +592,7 @@
 
             document.getElementById("loading").classList.add("d-none");
             document.getElementById('hello').value = "Connected";
+            
             // Is this file a proof
             if (key.indexOf("proofs/") > -1) {
                 var proof = key.substr(6);
