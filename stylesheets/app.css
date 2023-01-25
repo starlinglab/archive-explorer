@@ -179,7 +179,7 @@ li .list-item-object:before {
     margin: 0.25rem;
 }
 #connection_input #contract {
-    width:50%;
+    width:40%;
 }
 #connection_input #tokenID {
     width:5%;

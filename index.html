@@ -59,13 +59,14 @@
         </strong>
         <input placeholder="Contract" id="contractAddress" value="0xfCa4f863b0A4C7D212ECFba038C18efcdAEc70d9"
             onchange="resetButton()">
+            <strong>
+                Token:
+            </strong>
+            <select id="dropdown" onchange="resetButton()" style="display:none;"></select>
+            <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
+        
         <span id="expand_details" style="font-size:2.5rem;"></span><br>
-        <strong>
-            Token:
-        </strong>
-        <select id="dropdown" onchange="resetButton()" style="display:none;"></select>
-        <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
-    </div>
+     </div>
 </div>
 <div id="connect_details" style="display:none; flex-direction: column;">
     <div id="nft-img-div" class="d-none">
