@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="/stylesheets/app.css">
-    <script src="/scripts/jszip.js"></script>
-    <script src="/scripts/ipfs-hash.js"></script>
+    <script src="scripts/jszip.js"></script>
+    <script src="scripts/ipfs-hash.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/replaywebpage@1.7.10/ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
@@ -14,7 +14,7 @@
             font-family: 'FakeReceipt';
             font-style: normal;
             font-weight: 500;
-            src: url('/fonts/fake-receipt-regular.ttf') format('truetype'), url('/fonts/fake-receipt.otf') format("opentype");
+            src: url('fonts/fake-receipt-regular.ttf') format('truetype'), url('fonts/fake-receipt.otf') format("opentype");
         }
     </style>
 </head>
@@ -151,7 +151,7 @@
 <script onload='litLoaded()' src="https://jscdn.litgateway.com/index.web.js"></script>
 <script type="module">
     // import ethers
-    import { ethers } from "/scripts/ethers-5.2.esm.min.js";
+    import { ethers } from "scripts/ethers-5.2.esm.min.js";
 
     // Verify Lit is loaded
     async function VerifyLit() {
