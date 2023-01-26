@@ -6,6 +6,7 @@
 .profile-main-loader{
     left: 50% !important;
     margin-left:-100px;
+    margin-top:-50px;
     position: fixed !important;
     top: 50% !important;
     width: 45px;
