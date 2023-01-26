@@ -154,14 +154,8 @@
 <script type="module">
     async function updateState(state, percent) {
         document.getElementById("loading-text").textContent="Loading... (" + state + ")";
-        /* let count=20*(percent / 100);
-        let g=" ";
-        for (var i=0; i<count; i++) 
-            g=g + ", grey"            
-        for (var i=count; i<20; i++) 
-            g=g + ", black"
-        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
-        document.getElementById("loading").style.backgroundPositionY="100%"; */
+        var svgTxt = document.getElementById("change-text");
+        svgTxt['innerText' in svgTxt ? "innerText" : "textContent"] = percent + "%";
     }
 
     // import ethers
@@ -251,7 +245,6 @@
         if (archiveURI.split('://')[0] == 'ipfs') {
             archiveURI = 'https://ipfs.io/ipfs/' + archiveURI.split('://')[1];
             document.getElementById("archiveURI").value = archiveURI;
-            console.log('after ' + archiveURI);
         } else {
             document.getElementById("archiveURI").value = archiveURI;
         }
@@ -331,7 +324,18 @@
                 <svg class="circular-loader"viewBox="25 25 50 50" >
                   <circle class="loader-path" cx="50" cy="50" r="20" fill="none" stroke="#white" stroke-width="1" />
                 </svg>
+                
+                <svg viewBox="25 25 50 50" style="height:105%;width:100%;position: absolute;top: 5px;left: 0;">
+                    <style>
+                        .svg-text {
+                            font: normal 0.5rem 'FakeReceipt';
+                            stroke: #fff;}
+                    </style>
+                <text text-anchor="middle" id="change-text" class="svg-text" y="50" x="50">50%</text>
+                </svg>
+              
               </div>
+
             </div>
                 
             </div>
@@ -377,13 +381,8 @@
     // update state of loading bar
     async function updateState(state,percent) {
         document.getElementById("loading-text").textContent="Loading... (" + state + ")";
-      /*   let count=20*(percent / 100);
-        let g=" ";
-        for (var i=0; i<count; i++) 
-            g=g + ", darkred"            
-        for (var i=count; i<20; i++) 
-            g=g + ", black"
-        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")"; */
+        var svgTxt = document.getElementById("change-text");
+        svgTxt['innerText' in svgTxt ? "innerText" : "textContent"] = percent + "%";
     }
 
     // load hash library and set containers for UI content
