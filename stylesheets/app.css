@@ -353,11 +353,3 @@ box-decoration-break: clone;
     width:50%;
 }
 
-#loading {
-    margin-top:10rem;
-    padding:0.75rem;
-    padding-left:2rem;
-    border-radius:1rem;
-    border:0.1rem solid white;
-    width: 100%;
-  }

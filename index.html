@@ -58,12 +58,12 @@
             Contract:
         </strong>
         <input placeholder="Contract" id="contractAddress" value="0xfCa4f863b0A4C7D212ECFba038C18efcdAEc70d9"
-            onchange="resetButton()">
+        onkeypress="resetButton()">
             <strong>
                 Token:
             </strong>
-            <select id="dropdown" onchange="resetButton()" style="display:none;"></select>
-            <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
+            <select id="dropdown" onkeypress="resetButton()" style="display:none;"></select>
+            <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onkeypress="resetButton()">
         
         <span id="expand_details" style="font-size:2.5rem;"></span><br>
      </div>
@@ -153,13 +153,14 @@
 <script type="module">
     async function updateState(state, percent) {
         document.getElementById("loading").innerHTML="Loading... (" + state + ")";
-        let count=20*(percent / 100);
+        /* let count=20*(percent / 100);
         let g=" ";
         for (var i=0; i<count; i++) 
-            g=g + ", darkred"            
+            g=g + ", grey"            
         for (var i=count; i<20; i++) 
             g=g + ", black"
         document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
+        document.getElementById("loading").style.backgroundPositionY="100%"; */
     }
 
     // import ethers
@@ -351,15 +352,25 @@
 
 
 <script>
+    // resize contract address field based on content
+    var input = document.getElementById('contractAddress'); // get the input element
+    input.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+    resizeInput.call(input); // immediately call the function
+    // resize input function
+    function resizeInput() {
+    this.style.width = this.value.length + "ch";
+    }
+
+    // update state of loading bar
     async function updateState(state,percent) {
         document.getElementById("loading").innerHTML="Loading... (" + state + ")";
-        let count=20*(percent / 100);
+      /*   let count=20*(percent / 100);
         let g=" ";
         for (var i=0; i<count; i++) 
             g=g + ", darkred"            
         for (var i=count; i<20; i++) 
             g=g + ", black"
-        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
+        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")"; */
     }
 
     // load hash library and set containers for UI content
