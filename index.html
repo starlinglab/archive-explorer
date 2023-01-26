@@ -107,6 +107,12 @@
             </strong> 
             <input id="accessConditions"><br>
         </div>
+        <div class="fill-available">
+            <strong>
+                IPFS Gateway:
+            </strong> 
+            <input id="ipfsgateway" value="https://ipfs.io"><br>
+        </div>
 </div>
 <script>
     // Reset button when user changes input
@@ -247,7 +253,7 @@
         console.log('before ' + archiveURI);
         // prepend IPFS gateway if IPFS URI
         if (archiveURI.split('://')[0] == 'ipfs') {
-            archiveURI = 'https://ipfs.io/ipfs/' + archiveURI.split('://')[1];
+            archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
             document.getElementById("archiveURI").value = archiveURI;
             console.log('after ' + archiveURI);
         } else {
