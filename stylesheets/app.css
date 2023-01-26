@@ -56,12 +56,12 @@ border-radius: 3px;
     font-size: calc(1rem);
     background-color: black;
     color: white;
-    padding: 1rem;
+    padding: 0.75rem;
     border-radius: 1rem;
     border-color: white;
     float: right;
     margin-right: 1rem;
-    margin-top: 0.3rem;
+    margin-top: 0.1rem;
 }
 #hello:hover {
     background-color: grey;
