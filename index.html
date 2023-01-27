@@ -118,12 +118,18 @@
     // fetch url params
     if (window.location.search.length > 0) {
         const urlParams = (new URL(document.location)).searchParams;
-        const contractAddress = urlParams.get("contract");
-        console.log(contractAddress);
-        document.getElementById('contractAddress').value = contractAddress
-        const tokenId = urlParams.get("id");
-        console.log(tokenId);
-        document.getElementById('tokenId').value = tokenId;
+        if (urlParams.has("contract")) {
+            const contractAddress = urlParams.get("contract");
+            document.getElementById('contractAddress').value = contractAddress;
+        }
+        if (urlParams.has("chain")) {
+            const chainID = urlParams.get("chain");
+            document.getElementById('chainID').value = chainID;
+        }
+        if (urlParams.has("id")) {
+            const tokenType = urlParams.get("id");
+            document.getElementById('tokenID').value = tokenType;
+        }
     };
 
     // Create file Icon
