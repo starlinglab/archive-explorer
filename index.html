@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="stylesheets/app.css">
     <script src="scripts/jszip.js"></script>
     <script src="scripts/ipfs-hash.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/replaywebpage@1.7.10/ui.js"></script>
+    <script src="scripts/ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         @font-face {
@@ -62,7 +62,6 @@
             <strong>
                 Token:
             </strong>
-            <select id="dropdown" onchange="resetButton()" style="display:none;"></select>
             <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
         
         <span id="expand_details" style="font-size:2.5rem;"></span><br>
@@ -72,7 +71,6 @@
     <div id="nft-img-div" class="d-none">
         <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
     </div>
-    <div id="tokens"></div>
     <div id="TokenStatus"></div>
     <span class='formText'>
         <div>
@@ -200,21 +198,27 @@
     // read NFT and populate UI with its metadata
     async function ReadNFT() {
 
+        const tokenId = document.getElementById("tokenId").value;
+        const address = document.getElementById("contractAddress").value;
+
+        if (!tokenId || !address) {
+           alert("Contract Address or Token ID invalid") ;
+           resetButton();
+           return;
+        }
+
         clearInnerHTML();
         document.getElementById("loading").classList.remove("d-none");
         updateState("Init",0);
+
         document.getElementById('hello').value = "Connecting...";
 
         updateState("Authenticating with LIT",5);
         await getAuthSign();
         await VerifyLit();
-
-
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const address = document.getElementById("contractAddress").value;
         const contract = new ethers.Contract(address, contractAbi, signer);
-        const tokenId = document.getElementById("tokenId").value;
         updateState("Reading access token uri" + tokenId,10);
 
         // Get image
@@ -236,18 +240,17 @@
         const accountUC = accounts[0].toString().toUpperCase()
 
 
-        // Get owner and creator addresses
         const owner = (await contract.balanceOf(account, tokenId))
-        const creator = (await contract.tokenIdtoCreator(tokenId)).toString().toUpperCase();
+        if (owner == 0) {
+            alert("You do not own the access token required to decrypt this file");
+            updateState("Cannot decrypt, Missing Token",100);
+            resetButton();
+            return false;
+        }
 
-        // Construct text if metamask matches Creator or Owner
-        let v = "Token Access: "
-        if (creator == accountUC) v = v + " [Creator] ";
-        if (owner > 0) v = v + " [Owner] "
-        document.getElementById("TokenStatus").innerHTML = v;
 
         //Only update metadata from token if connectionDetails is not visibile
-        //This will allow advancd users to set their own settings
+        //This will allow advanced users to set their own settings
         const connectionDetails = document.getElementById('connect_details');
         if ( connectionDetails.style.display == "none") {
             updateState("Reading access token metadata",20);
@@ -267,12 +270,20 @@
                 document.getElementById("archiveURI").value = archiveURI;
             }
             document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
+
         } else {
             console.log("Skipping metadata extraction because connection details is open");
         }
         ProcessAsset();
     }
-
+    function axiosProgress(progressEvent) {
+        const total = parseFloat(progressEvent.total);
+        const current = progressEvent.loaded;
+        if (total == NaN) return
+        let percentCompleted = Math.floor(current / total * 100)
+        let progressBar = Math.floor(current / total * 25)
+        updateState("Downloading archive " + percentCompleted + "%",25 + progressBar);
+    }
     async function ProcessAsset() {
         try {
 
@@ -285,7 +296,7 @@
 
             // get encrypted data
             updateState("Downloading archive",25);
-            let response = await axios.get(URL, { responseType: 'arraybuffer' });
+            let response = await axios.get(URL, { responseType: 'arraybuffer', onDownloadProgress: axiosProgress });
 
             let readBuffer = response.data;
 
@@ -315,6 +326,7 @@
         } catch (ex) {
             console.log(ex);
             alert(ex.message);
+            resetButton();
             console.log(ex.stack);
         }
     }
@@ -419,8 +431,6 @@
     function copyToClipboard(textID) {
 
         var copyText = document.getElementById(textID);
-        // copyText.select();
-        // copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.textContent);
         var tooltip = document.getElementById(textID + '_Tooltip');
         tooltip.innerHTML = "";
