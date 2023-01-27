@@ -257,7 +257,14 @@
 
         ProcessAsset();
     }
-
+    function axiosProgress(progressEvent) {
+        const total = parseFloat(progressEvent.total);
+        const current = progressEvent.loaded;
+        if (total == NaN) return
+        let percentCompleted = Math.floor(current / total * 100)
+        let progressBar = Math.floor(current / total * 25)
+        updateState("Downloading archive " + percentCompleted + "%",25 + progressBar);
+    }
     async function ProcessAsset() {
         try {
 
@@ -270,7 +277,7 @@
 
             // get encrypted data
             updateState("Downloading archive",25);
-            let response = await axios.get(URL, { responseType: 'arraybuffer' });
+            let response = await axios.get(URL, { responseType: 'arraybuffer', onDownloadProgress: axiosProgress });
 
             let readBuffer = response.data;
 
