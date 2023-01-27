@@ -193,21 +193,27 @@
 
     // read NFT and populate UI with its metadata
     async function ReadNFT() {
+        const tokenId = document.getElementById("tokenId").value;
+        const address = document.getElementById("contractAddress").value;
+
+        if (!tokenId || !address) {
+           alert("Contract Address or Token ID invalid") ;
+           resetButton();
+           return;
+        }
+
         clearInnerHTML();
         document.getElementById("loading").classList.remove("d-none");
         updateState("Init",0);
+
         document.getElementById('hello').value = "Connecting...";
 
         updateState("Authenticating with LIT",5);
         await getAuthSign();
         await VerifyLit();
-
-
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const address = document.getElementById("contractAddress").value;
         const contract = new ethers.Contract(address, contractAbi, signer);
-        const tokenId = document.getElementById("tokenId").value;
         updateState("Reading access token uri" + tokenId,10);
 
         // Get image
@@ -229,15 +235,14 @@
         const accountUC = accounts[0].toString().toUpperCase()
 
 
-        // Get owner and creator addresses
         const owner = (await contract.balanceOf(account, tokenId))
-        const creator = (await contract.tokenIdtoCreator(tokenId)).toString().toUpperCase();
+        if (owner == 0) {
+            alert("You do not own the access token required to decrypt this file");
+            updateState("Cannot decrypt, Missing Token",100);
+            resetButton();
+            return false;
+        }
 
-        // Construct text if metamask matches Creator or Owner
-        let v = "Token Access: "
-        if (creator == accountUC) v = v + " [Creator] ";
-        if (owner > 0) v = v + " [Owner] "
-        document.getElementById("TokenStatus").innerHTML = v;
 
         updateState("Reading access token metadata",20);
         // Get metadata
@@ -300,6 +305,7 @@
         } catch (ex) {
             console.log(ex);
             alert(ex.message);
+            resetButton();
             console.log(ex.stack);
         }
     }
