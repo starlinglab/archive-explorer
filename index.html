@@ -111,7 +111,7 @@
             <strong>
                 IPFS Gateway:
             </strong> 
-            <input id="ipfsgateway" value="https://ipfs.io"><br>
+            <input id="ipfsgateway" placeholder="Use Native IPFS://" value="https://ipfs.io"><br>
         </div>
 </div>
 <script>
@@ -253,7 +253,9 @@
         console.log('before ' + archiveURI);
         // prepend IPFS gateway if IPFS URI
         if (archiveURI.split('://')[0] == 'ipfs') {
-            archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+            if (document.getElementById("ipfsgateway").value!="") {
+                archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+            }
             document.getElementById("archiveURI").value = archiveURI;
             console.log('after ' + archiveURI);
         } else {
