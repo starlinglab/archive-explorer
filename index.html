@@ -107,6 +107,17 @@
         </div>
 </div>
 <script>
+    // resize contract address field based on content
+    var input = document.getElementById('contractAddress'); // get the input element
+    input.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+    resizeInput.call(input); // immediately call the function
+    // resize input function
+    function resizeInput() {
+    this.style.width = this.value.length + "ch";
+    }
+
+    // update state of loading bar
+
     // Reset button when user changes input
     function resetButton() {
         document.getElementById('hello').value = "Connect";
