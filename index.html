@@ -199,6 +199,7 @@
 
     // read NFT and populate UI with its metadata
     async function ReadNFT() {
+
         clearInnerHTML();
         document.getElementById("loading").classList.remove("d-none");
         updateState("Init",0);
@@ -245,24 +246,30 @@
         if (owner > 0) v = v + " [Owner] "
         document.getElementById("TokenStatus").innerHTML = v;
 
-        updateState("Reading access token metadata",20);
-        // Get metadata
-        document.getElementById("litKey").value = await contract.getLITKey(tokenId);
-        document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
-        let archiveURI = await contract.getArchiveURI(tokenId);
-        console.log('before ' + archiveURI);
-        // prepend IPFS gateway if IPFS URI
-        if (archiveURI.split('://')[0] == 'ipfs') {
-            if (document.getElementById("ipfsgateway").value!="") {
-                archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+        //Only update metadata from token if connectionDetails is not visibile
+        //This will allow advancd users to set their own settings
+        const connectionDetails = document.getElementById('connect_details');
+        if ( connectionDetails.style.display == "none") {
+            updateState("Reading access token metadata",20);
+            // Get metadata
+            document.getElementById("litKey").value = await contract.getLITKey(tokenId);
+            document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
+            let archiveURI = await contract.getArchiveURI(tokenId);
+            console.log('before ' + archiveURI);
+            // prepend IPFS gateway if IPFS URI
+            if (archiveURI.split('://')[0] == 'ipfs') {
+                if (document.getElementById("ipfsgateway").value!="") {
+                    archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+                }
+                document.getElementById("archiveURI").value = archiveURI;
+                console.log('after ' + archiveURI);
+            } else {
+                document.getElementById("archiveURI").value = archiveURI;
             }
-            document.getElementById("archiveURI").value = archiveURI;
-            console.log('after ' + archiveURI);
+            document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
         } else {
-            document.getElementById("archiveURI").value = archiveURI;
+            cosole.log("Skipping metadata extraction because connection details is open");
         }
-        document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
-
         ProcessAsset();
     }
 
