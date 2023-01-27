@@ -62,7 +62,6 @@
             <strong>
                 Token:
             </strong>
-            <select id="dropdown" onchange="resetButton()" style="display:none;"></select>
             <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
         
         <span id="expand_details" style="font-size:2.5rem;"></span><br>
@@ -72,7 +71,6 @@
     <div id="nft-img-div" class="d-none">
         <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
     </div>
-    <div id="tokens"></div>
     <div id="TokenStatus"></div>
     <span class='formText'>
         <div>
@@ -249,12 +247,11 @@
         document.getElementById("litKey").value = await contract.getLITKey(tokenId);
         document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
         let archiveURI = await contract.getArchiveURI(tokenId);
-        console.log('before ' + archiveURI);
+
         // prepend IPFS gateway if IPFS URI
         if (archiveURI.split('://')[0] == 'ipfs') {
             archiveURI = 'https://ipfs.io/ipfs/' + archiveURI.split('://')[1];
             document.getElementById("archiveURI").value = archiveURI;
-            console.log('after ' + archiveURI);
         } else {
             document.getElementById("archiveURI").value = archiveURI;
         }
@@ -410,8 +407,6 @@
     function copyToClipboard(textID) {
 
         var copyText = document.getElementById(textID);
-        // copyText.select();
-        // copyText.setSelectionRange(0, 99999);
         navigator.clipboard.writeText(copyText.textContent);
         var tooltip = document.getElementById(textID + '_Tooltip');
         tooltip.innerHTML = "";
