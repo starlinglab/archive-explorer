@@ -221,7 +221,7 @@
         const tokenId = document.getElementById("tokenId").value;
         const address = document.getElementById("contractAddress").value;
 
-        if (!tokenId || !address) {
+        if (!tokenId || !address || address.length != 42 || address.slice(0, 2).toUpperCase()  != "0X") {
            alert("Contract Address or Token ID invalid") ;
            resetButton();
            return;
