@@ -340,12 +340,9 @@
         <div id="custom_attributes"></div>
         <div id="download_links"></div>
     </div>
-    <div id="image_div" class="d-none">
-        <div id="proofmode_text"></div>
-    </div>
-    <div id="webrecorder_container" class="d-none">
-        <div id="webrecorder"></div>
-        <div id="wacz" class="d-none"></div>
+    <div style="width:100%;"><div id="webrecorder"></div><div id="proofmode_text"></div>
+   
+    <div id="fileContent" style="height:100%" ></div>
     </div>
 </div>
 
@@ -379,6 +376,7 @@
     const imageDiv = document.getElementById('image_div');
     const proofDiv = document.getElementById('proofmode_text');
     const signatureDiv = document.getElementById('validated_signatures');
+    const divContent = document.getElementById('fileContent');
     
     // Create copy to clipboard button
     function createCopyButton(id) {
@@ -770,11 +768,11 @@
 
         blob = new Blob([new Uint8Array(wacz_content)], { type: 'application/wacz' });
         var url = URL.createObjectURL(blob);
-        x = document.getElementById("wacz");
-        y = document.getElementById("webrecorder_container");
-        x.classList.remove("d-none");
-        y.classList.remove("d-none");
-        x.innerHTML = '<replay-web-page source="' + url + '" embed="replay-with-info" id="wacz2"></replay-web-page>';
+        x = document.getElementById("fileContent");
+        x.innerHTML = '<content-wacz id="contentWacz" src=""></content-wacz>';
+        y = document.getElementById("contentWacz");
+        y.url=url;
+        
     }
 
     async function setProofmodeImage(content) {
@@ -868,18 +866,15 @@
         contentHash.innerHTML = "";
         eContentHash.innerHTML = "";
         customDiv.innerHTML = "";
-        linksDiv.innerHTML = "";
-        imageDiv.innerHTML = "";
-        imageDiv.className = "d-none";
+        linksDiv.innerHTML = "";        
         proofDiv.innerHTML = "";
         waczTextContainer.innerHTML = "";
         signatureDiv.innerHTML = "";
-        document.getElementById("wacz").className = "d-none";
-        document.getElementById("webrecorder_container").className = "d-none";
+        divContent.innerHTML="";
     }
 
 </script>
-
+<script src="component-wacz.js"></script>
 </body>
 
 </html>
