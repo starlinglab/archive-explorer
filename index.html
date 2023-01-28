@@ -109,10 +109,30 @@
             <strong>
                 IPFS Gateway:
             </strong> 
-            <input id="ipfsgateway" placeholder="Use Native IPFS://" value="https://ipfs.io"><br>
+            <input id="ipfsgateway" value="https://ipfs.io"><br>
         </div>
+        <div class="fill-available">
+            <strong>
+                Advanced Settings:
+            </strong> 
+        </div>
+        <div class="fill-quater">
+            <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
+        </div>
+        <div class="fill-quater">
+            <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label for="manualValues">Edit values manually</label></input>
+        </div>
+
 </div>
 <script>
+    function ui_nativIpfs(what) {
+        //No op
+    }
+    function ui_manualValues(what) {
+        document.getElementById("litKey").disabled = !what.checked;
+        document.getElementById("archiveURI").disabled = !what.checked;
+        document.getElementById("accessConditions").disabled = !what.checked;
+    }
     // Reset button when user changes input
     function resetButton() {
         document.getElementById('hello').value = "Connect";
@@ -252,7 +272,7 @@
         //Only update metadata from token if connectionDetails is not visibile
         //This will allow advanced users to set their own settings
         const connectionDetails = document.getElementById('connect_details');
-        if ( connectionDetails.style.display == "none") {
+        if (  document.getElementById("manualValues").checked==false) {
             updateState("Reading access token metadata",20);
             // Get metadata
             document.getElementById("litKey").value = await contract.getLITKey(tokenId);
@@ -261,7 +281,7 @@
             console.log('before ' + archiveURI);
             // prepend IPFS gateway if IPFS URI
             if (archiveURI.split('://')[0] == 'ipfs') {
-                if (document.getElementById("ipfsgateway").value!="") {
+                if (document.getElementById("nativeIpfs").checked==false) {
                     archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
                 }
                 document.getElementById("archiveURI").value = archiveURI;
@@ -902,6 +922,9 @@
         document.getElementById("wacz").className = "d-none";
         document.getElementById("webrecorder_container").className = "d-none";
     }
+
+    ui_manualValues(false);
+    ui_nativIpfs(false);
 
 </script>
 
