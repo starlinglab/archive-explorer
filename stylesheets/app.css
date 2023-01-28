@@ -361,6 +361,10 @@ box-decoration-break: clone;
 #contractAddress {
     width:50%;
 }
+#nft-img-div {
+    min-height: 130px;;
+    display:block;
+}
 
 /* Check boxes */
 .css-checkbox {
