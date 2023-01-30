@@ -7,8 +7,7 @@ html {
     background-color: black;
     color: white;
     line-height: 1.5rem;
-    font-family: Georgia,'Times New Roman' ,Times,serif;
-;
+    font-family: Georgia, 'Times New Roman', Times, serif;
     padding: 0.25rem;
 }
 h1 {
@@ -17,7 +16,7 @@ h1 {
 }
 a {
     color: white;
-    padding: .25em .75em;
+    padding: 0.25em 0.75em;
     border: 1px solid #fff9f2;
     border-radius: 100px;
     text-decoration: none;
@@ -29,11 +28,11 @@ a:hover {
     text-decoration: none;
 }
 #container {
-    width:100%;
+    width: 100%;
     margin-top: 1rem;
 }
 input {
-    width:auto;
+    width: auto;
     border-radius: 10px;
     padding: 0.5rem;
     overflow: hidden;
@@ -42,15 +41,16 @@ input {
     border-color: white;
     color: white;
     font-size: 1.25rem;
-    font-family: Georgia,'Times New Roman' ,Times,serif;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
-input:focus-visible, #hello:focus-visible {
-outline: 2px dotted white;
-border-radius: 3px;
+input:focus-visible,
+#hello:focus-visible {
+    outline: 2px dotted white;
+    border-radius: 3px;
 }
 .image_view {
     width: 100%;
-            }
+}
 #hello {
     font-family: 'FakeReceipt';
     font-size: calc(1rem);
@@ -88,26 +88,37 @@ ul {
 }
 #connect_details {
     font-family: 'FakeReceipt';
-    margin: 1em;
-    margin-top:1.5em;
+    margin: 1.5rem 1rem 1rem;
     display: block;
     flex-wrap: wrap;
     width: auto;
     background-color: rgb(34, 34, 34);
-    padding: 1em;
-    border-radius: 15px;
+    padding: 1rem;
     border: 1px dashed white;
     font-size: 1rem;
 }
 
-#connect_details input, #connect_details label {
-    margin:0.4rem 0.4rem;
+#topDetails, #mainDetails {
+    display: flex;
+    flex-direction: row;
+}
+
+#mainDetails {
+    flex-wrap: wrap;
+}
+#mainDetails div {
+    margin-right: 1rem;
+}
+
+#connect_details input,
+#connect_details label {
+    margin: 0.4rem;
 }
 
 #connect_details input:disabled {
-    background:#333333;
-    border-color:#eeeeee;
-    color:#eeeeee;
+    background: #333333;
+    border-color: #eeeeee;
+    color: #eeeeee;
 }
 
 #image_div {
@@ -182,10 +193,10 @@ li .list-item-object:before {
     margin: 0.25rem;
 }
 #connection_input #contract {
-    width:40%;
+    width: 40%;
 }
 #connection_input #tokenID {
-    width:5%;
+    width: 5%;
 }
 
 #all_metadata {
@@ -201,8 +212,9 @@ li .list-item-object:before {
     display: flex;
     flex-wrap: wrap;
 }
-#connect_details #chain, #connect_details #type {
-    width:100px;
+#connect_details #chain,
+#connect_details #type {
+    width: 100px;
 }
 #download_links div,
 .btn-group {
@@ -233,7 +245,7 @@ li .list-item-object:before {
     opacity: 0;
     transition: opacity 0.3s;
     border: 1px dotted white;
-    font-family: Georgia,'Times New Roman' ,Times,serif;
+    font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 1rem;
     height: 1rem;
     overflow: hidden;
@@ -277,32 +289,34 @@ strong {
 .content {
     width: auto;
     padding-top: 1rem;
-    padding-right:1rem;
+    padding-right: 1rem;
 }
 
 .contentwWACZ {
-    width:40%;
+    width: 40%;
 }
 
 .jsonButton {
     font-family: 'FakeReceipt';
-    color:#fff;
-    padding: .25em .75em;
+    color: #fff;
+    padding: 0.25em 0.75em;
     border: 1px solid #fff9f2;
     border-radius: 100px;
     background-color: transparent;
     margin: 0.25rem;
     font-size: 1rem;
-    }
+}
 .jsonButton:hover {
     background-color: #fff9f2;
     color: #000;
 }
-#validated_signatures, #custom_attributes {
-    margin:1.5rem 0rem;
+#validated_signatures,
+#custom_attributes {
+    margin: 1.5rem 0;
 }
 #timestamp {
-margin-bottom:1.5rem;}
+    margin-bottom: 1.5rem;
+}
 
 .authsignIMG,
 .otsIMG {
@@ -317,15 +331,18 @@ a:hover .otsIMG {
 #webrecorder_container {
     min-width: 60%;
 }
-#webrecorder_container, #connect_details #archiveURI,
-#connect_details #litKey, #connect_details #accessConditions,
+#webrecorder_container,
+#connect_details #archiveURI,
+#connect_details #litKey,
+#connect_details #accessConditions,
 .fill-available {
     width: fill-available;
     width: -webkit-fill-available;
     width: -moz-available;
 }
-#connect_details #chainID, #connect_details #tokenType {
-    width:7ch;
+#connect_details #chainID,
+#connect_details #tokenType {
+    width: 7ch;
 }
 .inline-b {
     display: inline-block;
@@ -335,35 +352,40 @@ a:hover .otsIMG {
     border-radius: 50px;
     background-color: white;
     height: 100%;
-    }
+}
 
 .dataID {
-    padding: .5em .5em;
-background: rgb(45,45,45);
-border-radius: 3px;
-letter-spacing: -.08em;
-line-height: 1.2em;
-font-weight: 300;
-text-align: right;
-margin-top: -0.6rem;
-box-decoration-break: clone;
+    padding: 0.5em;
+    background: rgb(45, 45, 45);
+    border-radius: 3px;
+    letter-spacing: -0.08em;
+    line-height: 1.2em;
+    font-weight: 300;
+    text-align: right;
+    margin-top: -0.6rem;
+    box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
 }
 
-#CID, #content_hash, #EncryptedArchiveHash {
-    margin-top:1rem;
-  }
+#CID,
+#content_hash,
+#EncryptedArchiveHash {
+    margin-top: 1rem;
+}
 
 #content_hashes {
-    margin:1.5rem 0rem;
+    margin: 1.5rem 0;
 }
 
 #contractAddress {
-    width:40ch;
+    width: 40ch;
 }
 #nft-img-div {
-    min-height: 130px;;
-    display:block;
+    min-height: 130px;
+}
+
+#nft-img-div img {
+    padding: 0.5rem;
 }
 
 /* Check boxes */
@@ -376,13 +398,13 @@ box-decoration-break: clone;
     margin: -1px;
     padding: 0;
     border: 0;
-  }
-  #inputPreview {
+}
+#inputPreview {
     display: flex;
     gap: 20px;
     justify-content: center;
-  }
-  .css-checkbox + label {
+}
+.css-checkbox + label {
     position: relative;
     font-size: 16px;
     cursor: pointer;
@@ -390,8 +412,8 @@ box-decoration-break: clone;
     align-items: center;
     height: 36px;
     color: white;
-  }
-  .css-checkbox + label::before {
+}
+.css-checkbox + label::before {
     content: " ";
     display: inline-block;
     vertical-align: middle;
@@ -404,8 +426,8 @@ box-decoration-break: clone;
     border-color: black;
     border-radius: 8px;
     box-shadow: none;
-  }
-  .css-checkbox:checked + label::after {
+}
+.css-checkbox:checked + label::after {
     content: " ";
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNTIgNTEyIj48cGF0aCBmaWxsPSIiIGQ9Ik0yNDIuNzIgMjU2bDEwMC4wNy0xMDAuMDdjMTIuMjgtMTIuMjggMTIuMjgtMzIuMTkgMC00NC40OGwtMjIuMjQtMjIuMjRjLTEyLjI4LTEyLjI4LTMyLjE5LTEyLjI4LTQ0LjQ4IDBMMTc2IDE4OS4yOCA3NS45MyA4OS4yMWMtMTIuMjgtMTIuMjgtMzIuMTktMTIuMjgtNDQuNDggMEw5LjIxIDExMS40NWMtMTIuMjggMTIuMjgtMTIuMjggMzIuMTkgMCA0NC40OEwxMDkuMjggMjU2IDkuMjEgMzU2LjA3Yy0xMi4yOCAxMi4yOC0xMi4yOCAzMi4xOSAwIDQ0LjQ4bDIyLjI0IDIyLjI0YzEyLjI4IDEyLjI4IDMyLjIgMTIuMjggNDQuNDggMEwxNzYgMzIyLjcybDEwMC4wNyAxMDAuMDdjMTIuMjggMTIuMjggMzIuMiAxMi4yOCA0NC40OCAwbDIyLjI0LTIyLjI0YzEyLjI4LTEyLjI4IDEyLjI4LTMyLjE5IDAtNDQuNDhMMjQyLjcyIDI1NnoiLz48L3N2Zz4=");
     background-repeat: no-repeat;
@@ -415,13 +437,12 @@ box-decoration-break: clone;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 0px;
-    left: 0px;
-    top: 0px;
+    margin-left: 0;
+    left: 0;
+    top: 0;
     text-align: center;
     background-color: transparent;
     font-size: 10px;
     height: 36px;
     width: 36px;
-  }
-  
+}
