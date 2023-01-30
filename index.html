@@ -292,7 +292,7 @@
             document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
 
         } else {
-            console.log("Skipping metadata extraction because connection details is open");
+            console.log("Skipping metadata extraction and using manual values");
         }
         ProcessAsset();
     }
