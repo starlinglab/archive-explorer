@@ -175,8 +175,8 @@ svg {
     align-items: flex-start;
 }
 
-#tokenDiv {
-    margin-left: 1rem;
+#contractDiv {
+    margin-right: 1rem;
 }
 
 #fileIcon img,
