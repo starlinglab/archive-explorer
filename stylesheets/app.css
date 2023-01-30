@@ -326,8 +326,7 @@ a:hover .otsIMG {
     width: -webkit-fill-available;
     width: -moz-available;
 }
-.fill-quater {
-    width:25%;
+.inline-b {
     display: inline-block;
 }
 #wacz {
