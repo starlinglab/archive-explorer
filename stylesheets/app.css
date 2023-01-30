@@ -81,11 +81,9 @@ input:focus-visible,
 
 ul {
     padding-left: 0;
-}
-
-ul {
     list-style: none;
 }
+
 #connect_details {
     font-family: 'FakeReceipt';
     margin: 1.5rem 1rem 1rem;
@@ -99,7 +97,8 @@ ul {
     border-radius: 10px;
 }
 
-#topDetails, #mainDetails {
+#topDetails,
+#mainDetails {
     display: flex;
     flex-direction: row;
 }
@@ -150,44 +149,14 @@ ul {
 #recorderMetadata:hover {
     border-style: dashed;
 }
-li li {
-    padding: 0.1em;
-    border: 1px solid black;
-    margin: 1em;
-}
-
 
 svg {
     position: relative;
     padding-top: 2px;
 }
 
-li .list-item-object:before {
-    content: '+';
-    font-size: 1.5rem;
-    font-weight: bolder;
-}
-
 .receiptFont {
     font-family: 'FakeReceipt';
-}
-
-#publicKey,
-#authenticatedMessage,
-#sha256hash,
-#pgpPublicKey,
-#pgpSignature,
-#signature,
-#signature {
-    height: 100px;
-    overflow-y: scroll;
-    border: 2px dotted white;
-    text-decoration: none !important;
-}
-
-#txtURL {
-    width: 60%;
-    margin-top: 0.5rem;
 }
 
 #connection_input input {
@@ -198,7 +167,8 @@ li .list-item-object:before {
     justify-content: space-between;
 }
 
-#connection_input, #connection_input #connection_fields {
+#connection_input,
+#connection_input #connection_fields {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -206,12 +176,9 @@ li .list-item-object:before {
 }
 
 #tokenDiv {
-    margin-left:1rem;
+    margin-left: 1rem;
 }
 
-#all_metadata {
-    margin-top: 20rem;
-}
 #fileIcon img,
 .downloadIcon {
     width: 20px;
@@ -222,10 +189,7 @@ li .list-item-object:before {
     display: flex;
     flex-wrap: wrap;
 }
-#connect_details #chain,
-#connect_details #type {
-    width: 100px;
-}
+
 #download_links div,
 .btn-group {
     padding: 0.5em;
@@ -287,7 +251,6 @@ li .list-item-object:before {
 
 .overflowText::after {
     content: '...';
-    /*position: absolute;*/
     right: 0;
     bottom: 0;
 }
@@ -300,10 +263,6 @@ strong {
     width: auto;
     padding-top: 1rem;
     padding-right: 1rem;
-}
-
-.contentwWACZ {
-    width: 40%;
 }
 
 .jsonButton {
