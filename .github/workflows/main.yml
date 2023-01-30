@@ -31,7 +31,9 @@ jobs:
       uses: actions/checkout@master
       
     - run: |
-        npm i --global ipfs-car
+        ver="<small>Published $(date) - $(git rev-parse --short HEAD)</small>"
+        sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
+        npm i --global ipfs-car        
         ipfs-car --pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrapWithDirectory false --verbose --output /tmp/output.car
         echo Posting to WEB3
         curl -X POST \
