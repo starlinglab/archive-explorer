@@ -105,8 +105,34 @@
             </strong> 
             <input id="accessConditions"><br>
         </div>
+        <div class="fill-available">
+            <strong>
+                IPFS Gateway:
+            </strong> 
+            <input id="ipfsgateway" value="https://ipfs.io"><br>
+        </div>
+        <div class="fill-available">
+            <strong>
+                Advanced Settings:
+            </strong> 
+        </div>
+        <div class="inline-b">
+            <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
+        </div>
+        <div class="inline-b">
+            <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label for="manualValues">Edit values manually</label></input>
+        </div>
+
 </div>
 <script>
+    function ui_nativIpfs(what) {
+        //No op
+    }
+    function ui_manualValues(what) {
+        document.getElementById("litKey").disabled = !what.checked;
+        document.getElementById("archiveURI").disabled = !what.checked;
+        document.getElementById("accessConditions").disabled = !what.checked;
+    }
     // Reset button when user changes input
     function resetButton() {
         document.getElementById('hello').value = "Connect";
@@ -191,10 +217,11 @@
 
     // read NFT and populate UI with its metadata
     async function ReadNFT() {
+
         const tokenId = document.getElementById("tokenId").value;
         const address = document.getElementById("contractAddress").value;
 
-        if (!tokenId || !address) {
+        if (!tokenId || !address || address.length != 42 || address.slice(0, 2).toUpperCase()  != "0X") {
            alert("Contract Address or Token ID invalid") ;
            resetButton();
            return;
@@ -242,21 +269,31 @@
         }
 
 
-        updateState("Reading access token metadata",20);
-        // Get metadata
-        document.getElementById("litKey").value = await contract.getLITKey(tokenId);
-        document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
-        let archiveURI = await contract.getArchiveURI(tokenId);
+        //Only update metadata from token if connectionDetails is not visibile
+        //This will allow advanced users to set their own settings
+        const connectionDetails = document.getElementById('connect_details');
+        if (  document.getElementById("manualValues").checked==false) {
+            updateState("Reading access token metadata",20);
+            // Get metadata
+            document.getElementById("litKey").value = await contract.getLITKey(tokenId);
+            document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
+            let archiveURI = await contract.getArchiveURI(tokenId);
+            console.log('before ' + archiveURI);
+            // prepend IPFS gateway if IPFS URI
+            if (archiveURI.split('://')[0] == 'ipfs') {
+                if (document.getElementById("nativeIpfs").checked==false) {
+                    archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+                }
+                document.getElementById("archiveURI").value = archiveURI;
+                console.log('after ' + archiveURI);
+            } else {
+                document.getElementById("archiveURI").value = archiveURI;
+            }
+            document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
 
-        // prepend IPFS gateway if IPFS URI
-        if (archiveURI.split('://')[0] == 'ipfs') {
-            archiveURI = 'https://ipfs.io/ipfs/' + archiveURI.split('://')[1];
-            document.getElementById("archiveURI").value = archiveURI;
         } else {
-            document.getElementById("archiveURI").value = archiveURI;
+            console.log("Skipping metadata extraction and using manual values");
         }
-        document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
-
         ProcessAsset();
     }
     function axiosProgress(progressEvent) {
@@ -308,7 +345,11 @@
 
         } catch (ex) {
             console.log(ex);
-            alert(ex.message);
+            if (ex.message == "JSON.parse: unexpected end of data at line 1 column 1 of the JSON data") {
+                alert("Access conditions are incomplete or inacurrate. If using custom values, verify their content or disable manual settings.");
+            } else {
+                alert(ex.message);
+            }
             resetButton();
             console.log(ex.stack);
         }
@@ -885,6 +926,9 @@
         document.getElementById("wacz").className = "d-none";
         document.getElementById("webrecorder_container").className = "d-none";
     }
+
+    ui_manualValues(false);
+    ui_nativIpfs(false);
 
 </script>
 
