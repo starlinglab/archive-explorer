@@ -99,13 +99,11 @@ ul {
     border: 1px dashed white;
     font-size: 1rem;
 }
-#connect_details div {
-    margin: 0rem 0.5rem ;
+
+#connect_details input, #connect_details label {
+    margin:0.4rem 0.4rem;
 }
-#connect_details input {
-    margin:0.4rem 0rem;
-    width:auto;
-}
+
 #connect_details input:disabled {
     background:#333333;
     border-color:#eeeeee;
@@ -319,12 +317,15 @@ a:hover .otsIMG {
 #webrecorder_container {
     min-width: 60%;
 }
-#webrecorder_container, #connect_details input,
-#connect_details #txtLIT, #connect_details #contract,
+#webrecorder_container, #connect_details #archiveURI,
+#connect_details #litKey, #connect_details #accessConditions,
 .fill-available {
     width: fill-available;
     width: -webkit-fill-available;
     width: -moz-available;
+}
+#connect_details #chainID, #connect_details #tokenType {
+    width:7ch;
 }
 .inline-b {
     display: inline-block;
@@ -358,7 +359,7 @@ box-decoration-break: clone;
 }
 
 #contractAddress {
-    width:50%;
+    width:40ch;
 }
 #nft-img-div {
     min-height: 130px;;

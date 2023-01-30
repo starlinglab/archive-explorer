@@ -68,21 +68,33 @@
      </div>
 </div>
 <div id="connect_details" style="display:none; flex-direction: column;">
-    <div id="nft-img-div" class="d-none">
-        <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
-    </div>
-    <div id="TokenStatus"></div>
-    <span class='formText'>
+    <div style="display:flex; flex-direction: row;">
+        <div id="nft-img-div" class="d-none">
+            <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
+        </div>
         <div>
             <strong>
                 Chain:
             </strong>
             <input type="text" id="chainID" value="mumbai" />
+        </div>
+        <div>
             <strong>
                 Type:
             </strong>
             <input id="tokenType" value="ERC1155" placeholder="Type">
         </div>
+        <div class="fill-available">
+            <strong>
+                Archive Description:
+            </strong> 
+            <input id="archiveDescription" class="fill-available">
+        </div>
+    </div>
+    
+    <div id="TokenStatus"></div>
+    <span class='formText'>
+        
         <div class="fill-available">
             <strong>Lit Key:</strong>
             <input type="text" id="litKey" /><br>
@@ -92,12 +104,6 @@
                 Archive URI: 
             </strong>
             <input id="archiveURI">
-        </div>
-        <div class="fill-available">
-            <strong>
-                Archive Description:
-            </strong> 
-            <input id="archiveDescription">
         </div>
         <div class="fill-available">
             <strong>
