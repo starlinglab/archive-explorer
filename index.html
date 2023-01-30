@@ -51,21 +51,25 @@
 <body>
 <div><h1>Archive Explorer</h1></div>
 <div>
-    <input type="button" id="hello" value="initializing..." disabled />
-
     <div id="connection_input">
-        <strong>
-            Contract:
-        </strong>
-        <input placeholder="Contract" id="contractAddress" value="0xfCa4f863b0A4C7D212ECFba038C18efcdAEc70d9"
-            onchange="resetButton()">
-            <strong>
-                Token:
-            </strong>
-            <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
-        
-        <span id="expand_details" style="font-size:2.5rem;"></span><br>
-     </div>
+        <div id="connection_fields">
+            <div id="contractDiv">
+                <strong>
+                    Contract:
+                </strong>
+                <input placeholder="Contract" id="contractAddress" value="0xfCa4f863b0A4C7D212ECFba038C18efcdAEc70d9"
+                    onchange="resetButton()">
+            </div>
+            <div id="tokenDiv">
+                <strong>
+                    Token:
+                </strong>
+                <input placeholder="Token ID" id="tokenId" value="" style="width:55px" onchange="resetButton()">
+                <span id="expand_details" style="font-size:2.5rem;"></span>
+            </div>
+        </div>
+        <input type="button" id="hello" value="initializing..." disabled />
+    </div>
 </div>
 <div id="connect_details" style="display:none; flex-direction: column;">
     <div id="topDetails">

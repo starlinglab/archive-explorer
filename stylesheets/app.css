@@ -96,6 +96,7 @@ ul {
     padding: 1rem;
     border: 1px dashed white;
     font-size: 1rem;
+    border-radius: 10px;
 }
 
 #topDetails, #mainDetails {
@@ -192,11 +193,20 @@ li .list-item-object:before {
 #connection_input input {
     margin: 0.25rem;
 }
-#connection_input #contract {
-    width: 40%;
+
+#connection_input {
+    justify-content: space-between;
 }
-#connection_input #tokenID {
-    width: 5%;
+
+#connection_input, #connection_input #connection_fields {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+#tokenDiv {
+    margin-left:1rem;
 }
 
 #all_metadata {
