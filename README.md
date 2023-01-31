@@ -9,6 +9,6 @@ You can browse the tokens you hold by finding your wallet on OpenSea
 - Mainnet - https://opensea.io/  
 - Testnet - https://testnets.opensea.io/  
 
-Starling Access Tokens have a self-referencing link to this app embedded inside them. The link can be accessed by using the `View Webiste` button in the menu of the token on Open Sea.
+Starling Access Tokens have a self-referencing link to this app embedded inside them. The link can be accessed by using the `View Website` button in the menu of the token on Open Sea.
 
 When in the app, to load the asset click `Connect` at the top right corner. You will be required to connect to your MetaMask wallet and sign an attestation for use with LIT. 
