@@ -379,9 +379,10 @@
             <div id="timestamp"></div>
             <div id="content_details"></div>
             <div id="content_hashes">
-                <div id="CID"></div>
-                <div id="EncryptedArchiveHash"></div>
-                <div id="content_hash"></div>
+                <div id="EncryptedArchiveCID"></div>
+                <div id="EncryptedArchiveSHA256"></div>
+                <div id="ArchiveCID"></div>
+                <div id="ArchiveSHA256"></div>
             </div>
 
             <div id="validated_signatures"></div>
@@ -417,10 +418,7 @@
     const svgArrow = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1.40905 8.91662L9.22925 1.09642M9.22925 1.09642L9.26519 7.5539M9.22925 1.09642L2.67349 1.1329" stroke="#FFF9F2" stroke-width="1.23961"/>
                 </svg>`;
-    const contentHash = document.getElementById('content_hash');
-    const eContentHash = document.getElementById('EncryptedArchiveHash');
     const titleDiv = document.getElementById('content_title');
-    const cidDiv = document.getElementById('CID');
     const contentdetailsDiv = document.getElementById('content_details');
     const timestampDiv = document.getElementById('timestamp');
     const customDiv = document.getElementById('custom_attributes');
@@ -509,23 +507,42 @@
         var proofmode_file = "";
 
         updateState("Processing - Generating IPFS CID", 80);
-        // IPFS Hash 
+        // IPFS Encrypted Archive Hash 
         const aUint8array = new Uint8Array(EA);
         const eaBuffer = new Buffer(EA);
         ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
         CIDhash = await Hash.of(eaBuffer, ipfsOptions);
+        
+        // IPFS Archive Hash 
+        const aBuffer = new Buffer(BA);
+        ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
+        CidArchiveHash = await Hash.of(aBuffer, ipfsOptions);
+        const ArchiveCID = document.getElementById('ArchiveCID');
+        ArchiveCID.innerHTML += `<strong>Archive</strong> `;
+        const aCidContainer = document.createElement('div');
+        aCidContainer.innerHTML = `<strong>CID:</strong> `;
+        const aCidValue = document.createElement('span');
+        aCidValue.id = 'aCIDvalue';
+        aCidValue.className = 'dataID';
+        aCidValue.innerHTML = CidArchiveHash.toUpperCase();
+        aCidContainer.appendChild(aCidValue);
+        aCidContainer.appendChild(createCopyButton('eaCIDvalue'));
+        ArchiveCID.appendChild(aCidContainer);
 
 
         updateState("Processing - Generating SHA256",85);
         // hash the encrypted archive and add content hash
         digestMessage(EA).then((digestHex) => {
-            const eContentHashSpan = document.createElement('span');
-            eContentHash.innerHTML = `<strong>Encrypted Archive Hash:</strong> `;
-            eContentHashSpan.className = 'dataID';
-            eContentHashSpan.id = 'encryptedcontentHashSpan';
-            eContentHashSpan.textContent = digestHex.toUpperCase();
-            eContentHash.appendChild(eContentHashSpan);
-            eContentHash.appendChild(createCopyButton('encryptedcontentHashSpan'));
+            const eaSHA256Container = document.createElement('div');
+            eaSHA256Container.innerHTML = `<strong>SHA256:</strong> `;
+            const eaSHA256Value = document.createElement('span');
+            eaSHA256Value.id = 'eaSHA256value';
+            eaSHA256Value.className = 'dataID';
+            eaSHA256Value.innerHTML = digestHex.toUpperCase();
+            eaSHA256Container.appendChild(eaSHA256Value);
+            eaSHA256Container.appendChild(createCopyButton('eaSHA256value'));
+            const eaSHA256 = document.getElementById('EncryptedArchiveSHA256');
+            eaSHA256.appendChild(eaSHA256Container);
         });
 
 
@@ -537,7 +554,8 @@
 
         updateState("Processing - Generating SHA256-2",95);
         // Hash the decrypted archive and add content hash to UI
-        contentHash.innerHTML = `<strong>Decrypted Archive Hash:</strong> `;
+        const archiveSHADiv = document.getElementById('ArchiveSHA256');
+        archiveSHADiv.innerHTML = `<strong>SHA256:</strong> `;
         const contentHashSpan = document.createElement('span');
         contentHashSpan.className = 'dataID';
         contentHashSpan.id = 'decryptedcontentHashSpan';
@@ -546,8 +564,8 @@
         digestMessage(decryptedBuffer).then((digest) => {
             console.log('decryptedBuffer hash: ' + digest);
             contentHashSpan.textContent = digest.toUpperCase();
-            contentHash.appendChild(contentHashSpan);
-            contentHash.appendChild(createCopyButton('decryptedcontentHashSpan'));
+            archiveSHADiv.appendChild(contentHashSpan);
+            archiveSHADiv.appendChild(createCopyButton('decryptedcontentHashSpan'));
         });
 
         // container for links
@@ -737,13 +755,17 @@
             }
 
             // CID HASH
-            cidDiv.innerHTML += `<strong>Encrypted Archive CID:</strong> `;
-            const cidValueContainer = document.createElement('span');
-            cidValueContainer.id = 'CIDvalue';
-            cidValueContainer.className = 'dataID';
-            cidValueContainer.innerHTML = CIDhash.toUpperCase();
-            cidDiv.appendChild(cidValueContainer);
-            cidDiv.appendChild(createCopyButton('CIDvalue'));
+            const encryptedArchiveCID = document.getElementById('EncryptedArchiveCID');
+            encryptedArchiveCID.innerHTML += `<strong>Encrypted Archive</strong> `;
+            const eaCidContainer = document.createElement('div');
+            eaCidContainer.innerHTML = `<strong>CID:</strong> `;
+            const eaCidValue = document.createElement('span');
+            eaCidValue.id = 'eaCIDvalue';
+            eaCidValue.className = 'dataID';
+            eaCidValue.innerHTML = CIDhash.toUpperCase();
+            eaCidContainer.appendChild(eaCidValue);
+            eaCidContainer.appendChild(createCopyButton('eaCIDvalue'));
+            encryptedArchiveCID.appendChild(eaCidContainer);
 
 
             // VALIDATED SIGNATURES
@@ -918,9 +940,6 @@
         titleDiv.innerHTML = "";
         timestampDiv.innerHTML = "";
         contentdetailsDiv.innerHTML = "";
-        cidDiv.innerHTML = "";
-        contentHash.innerHTML = "";
-        eContentHash.innerHTML = "";
         customDiv.innerHTML = "";
         linksDiv.innerHTML = "";
         imageDiv.innerHTML = "";
@@ -928,6 +947,10 @@
         proofDiv.innerHTML = "";
         waczTextContainer.innerHTML = "";
         signatureDiv.innerHTML = "";
+        document.getElementById("ArchiveSHA256").innerHTML = "";
+        document.getElementById("ArchiveCID").innerHTML = "";
+        document.getElementById("EncryptedArchiveSHA256").innerHTML = "";
+        document.getElementById("EncryptedArchiveCID").innerHTML = "";
         document.getElementById("wacz").className = "d-none";
         document.getElementById("webrecorder_container").className = "d-none";
     }
