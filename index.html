@@ -732,6 +732,11 @@
             // MIME TYPE
             contentdetailsDiv.innerHTML += `<br><strong>Mime Type:</strong> ` + content.contentMetadata.mime;
 
+            // SourceId
+            if (content.contentMetadata.sourceId !== undefined) {
+                contentdetailsDiv.innerHTML += `<br><strong>Source ID:</strong> ` + content.contentMetadata.sourceId.key + ": " + content.contentMetadata.sourceId.value;
+            }
+
             // CID HASH
             cidDiv.innerHTML += `<strong>Encrypted Archive CID:</strong> `;
             const cidValueContainer = document.createElement('span');
