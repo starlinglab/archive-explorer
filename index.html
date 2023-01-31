@@ -153,9 +153,6 @@
     };
 
     // Create file Icon
-    const fileIcon = document.createElement('span');
-    fileIcon.id = 'fileIcon';
-    fileIcon.innerHTML = `<img alt="File Icon" src="data:image/png;base64,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" />`;
 
     // Create event listener for expandable details
     const expandDetails = document.getElementById('expand_details');
@@ -750,18 +747,19 @@
             // VALIDATED SIGNATURES
             if (content.contentMetadata.validatedSignatures !== undefined) {
                 signatureDiv.innerHTML += `<strong>Validated Root of Trust</strong> `;
-                signatureDiv.append(fileIcon);
-                const detailsDiv = document.createElement('div');
-                detailsDiv.id = 'validated_signatures_details';
-                detailsDiv.innerHTML = content.contentMetadata.validatedSignatures[0].algorithm + ' (' + content.contentMetadata.validatedSignatures[0].provider + ')';
-
-                signatureDiv.appendChild(detailsDiv);
-                const json = JSON.stringify(content.contentMetadata.validatedSignatures);
-                const signatureUrl = URL.createObjectURL(new Blob([json], { type: "application/json" }));
-                signatureDiv.onclick = function () {
-                    window.open(signatureUrl, '_blank', 'height=500,width=500');
+                for (var i = 0; i < content.contentMetadata.validatedSignatures.length; i++) {
+                    const newIcon = document.importNode(penIcon, true);
+                    const detailsDiv = document.createElement('div');
+                    detailsDiv.id = 'validated_signatures_details' + i;
+                    detailsDiv.innerHTML = content.contentMetadata.validatedSignatures[i].algorithm + ' (' + content.contentMetadata.validatedSignatures[i].provider + ')';
+                    const json = JSON.stringify(content.contentMetadata.validatedSignatures[i]);
+                    const signatureUrl = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+                    detailsDiv.appendChild(newIcon);
+                    newIcon.onclick = function () {
+                        window.open(signatureUrl, '_blank', 'height=500,width=500');
+                    }
+                    signatureDiv.appendChild(detailsDiv);
                 }
-
             }
 
 
