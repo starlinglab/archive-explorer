@@ -654,7 +654,7 @@
             contentdetailsDiv.innerHTML += `<br><strong>Mime Type:</strong> ` + content.contentMetadata.mime;
 
             // SourceId
-            if ("key" && "value" in content.contentMetadata.sourceId) {
+            if (content.contentMetadata.sourceId !== undefined) {
                 contentdetailsDiv.innerHTML += `<br><strong>Source ID:</strong> ` + content.contentMetadata.sourceId.key + ": " + content.contentMetadata.sourceId.value;
             }
 
