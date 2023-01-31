@@ -106,6 +106,7 @@
             <input id="accessConditions"><br>
         </div>
 </div>
+<script src="scripts/chainMapping.js"></script>
 <script>
     // Reset button when user changes input
     function resetButton() {
@@ -115,22 +116,7 @@
     // Set img icon to expand token details
     document.getElementById('expand_details').innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAApElEQVR4nO3VQQrEIBBE0bpFifc/kqC3qWECARcz2hHbQKLQuPxPFAQA3TzYAO0rwMA7GFnPAqAzJJVSugcQQlDO+Yie+zIAq5OXUhRjXAfgj3j9XlwB/BNfAmAj7g5gJz4EONeMuBuAxrgLgBfi0wG8GJ8K4EDcMDABnOIyARzj6gKc42oCFsTVBNRf6veLdYirCXA+uQ1gXc8CYO1gA/TqK/gAazKvc5V6u5oAAAAASUVORK5CYII=">`;
 
-    // fetch url params
-    if (window.location.search.length > 0) {
-        const urlParams = (new URL(document.location)).searchParams;
-        if (urlParams.has("contract")) {
-            const contractAddress = urlParams.get("contract");
-            document.getElementById('contractAddress').value = contractAddress;
-        }
-        if (urlParams.has("chain")) {
-            const chainID = urlParams.get("chain");
-            document.getElementById('chainID').value = chainID;
-        }
-        if (urlParams.has("id")) {
-            const tokenType = urlParams.get("id");
-            document.getElementById('tokenID').value = tokenType;
-        }
-    };
+    
 
     // Create file Icon
     const fileIcon = document.createElement('span');
