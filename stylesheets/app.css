@@ -431,3 +431,8 @@ box-decoration-break: clone;
     font-size:10px;
     color: #cccccc;
 }
+  .penIcon {
+    width: 28px;
+    height: 22px;
+    margin-bottom: -3px;
+}
