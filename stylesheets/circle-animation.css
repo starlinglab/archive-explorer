@@ -26,8 +26,8 @@
 }
 
 .circular-loader {
-  -webkit-animation: rotate 2s linear infinite;
-          animation: rotate 2s linear infinite;
+  -webkit-animation: rotate 4s linear infinite;
+          animation: rotate 4s linear infinite;
   height: 100%;
   -webkit-transform-origin: center center;
       -ms-transform-origin: center center;
