@@ -781,41 +781,53 @@
 
             // Custom Attributes : Private & Extras
             if (content.contentMetadata.private !== undefined || content.contentMetadata.extras !== undefined) {
-                console.log('custom attributes found')
 
+                // Create Custom Attributes Div
                 customDiv.innerHTML = `<strong>Custom Attributes:</strong> `;
                 const buttonsDiv = document.createElement('div');
                 buttonsDiv.className = "btn-group";
                 customDiv.appendChild(buttonsDiv);
 
-                if (content.contentMetadata.private) {
-                    const privateButton = document.createElement('button');
-                    privateButton.textContent = "Private";
-                    privateButton.className = "jsonButton";
-                    const json = JSON.stringify(content.contentMetadata.private);
-                    const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
-                    privateButton.onclick = function () {
-                        window.open(url, '_blank', 'height=500,width=500');
-                    }
-                    buttonsDiv.appendChild(privateButton);
-                }
+                // Create Private Button
+                const privateButton = document.createElement('button');
+                privateButton.textContent = "Private";
+                privateButton.className = "jsonButton";
 
-                if (Object.keys(content.contentMetadata.extras).length !== 0) {
-                    console.log('typeof ' + typeof content.contentMetadata.extras)
-                    console.log('extras: ' + content.contentMetadata.extras)
-                    const extrasButton = document.createElement('button');
-                    extrasButton.textContent = "Public";
-                    extrasButton.className = "jsonButton";
-                    const json = JSON.stringify(content.contentMetadata.extras);
-                    const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
-                    extrasButton.onclick = function () {
-                        window.open(url, '_blank', 'height=500,width=500');
-                        //URL.revokeObjectURL(url);
-                    }
-                    buttonsDiv.appendChild(extrasButton);
-                }
+                // If Private exists, create URL from Private JSON data, else create empty JSON
+                const privateURL = (() => {
+                    if (content.contentMetadata.private)
+                        return URL.createObjectURL(new Blob([JSON.stringify(content.contentMetadata.private)], { type: "application/json" }))
+                    else
+                        return URL.createObjectURL(new Blob([JSON.stringify({})], { type: "application/json" }))
+                })();
+               
+                // Add click event to Private Button
+                privateButton.onclick = function () {
+                    window.open(privateURL, '_blank', 'height=500,width=500')
+                };
+                // Append Private Button to Custom Attributes Div
+                buttonsDiv.appendChild(privateButton);
 
-            }
+                // Create Public Button
+                const publicButton = document.createElement('button');
+                publicButton.textContent = "Public";
+                publicButton.className = "jsonButton";
+
+                // If Extras exist, create URL from Extras JSON data, else create empty JSON
+                const publicURL = (() => {
+                    if (content.contentMetadata.extras)
+                        return URL.createObjectURL(new Blob([JSON.stringify(content.contentMetadata.extras)], { type: "application/json" }))
+                    else
+                        return URL.createObjectURL(new Blob([JSON.stringify({})], { type: "application/json" }))
+                })();
+                
+                // Add click event to Public Button
+                publicButton.onclick = function () {
+                    window.open(publicURL, '_blank', 'height=500,width=500')
+                };
+                buttonsDiv.appendChild(publicButton);
+            };
+
             // check if proofmode is present
             if ("proofmode" in content.contentMetadata.private) {
                 console.log('proofmode found');
