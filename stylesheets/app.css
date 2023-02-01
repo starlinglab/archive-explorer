@@ -359,7 +359,7 @@ box-decoration-break: clone;
 }
 
 #contractAddress {
-    width:50%;
+    width:40ch;
 }
 #nft-img-div {
     min-height: 130px;;
