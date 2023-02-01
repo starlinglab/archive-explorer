@@ -436,3 +436,18 @@ box-decoration-break: clone;
     height: 22px;
     margin-bottom: -3px;
 }
+
+#ArchiveCID, #EncryptedArchiveCID,
+#EncryptedArchiveSHA256,
+#ArchiveSHA256 {
+    margin-top:0.75rem;
+}
+
+#ArchiveCID > div,
+#EncryptedArchiveCID > div,
+#EncryptedArchiveSHA256,
+#ArchiveSHA256
+{
+       margin-left:0.75rem;
+}
+
