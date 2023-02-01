@@ -124,6 +124,7 @@
         </div>
 
 </div>
+<script src="scripts/chainMapping.js"></script>
 <script>
     function ui_nativIpfs(what) {
         //No op
@@ -141,16 +142,7 @@
     // Set img icon to expand token details
     document.getElementById('expand_details').innerHTML = `<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAApElEQVR4nO3VQQrEIBBE0bpFifc/kqC3qWECARcz2hHbQKLQuPxPFAQA3TzYAO0rwMA7GFnPAqAzJJVSugcQQlDO+Yie+zIAq5OXUhRjXAfgj3j9XlwB/BNfAmAj7g5gJz4EONeMuBuAxrgLgBfi0wG8GJ8K4EDcMDABnOIyARzj6gKc42oCFsTVBNRf6veLdYirCXA+uQ1gXc8CYO1gA/TqK/gAazKvc5V6u5oAAAAASUVORK5CYII=">`;
 
-    // fetch url params
-    if (window.location.search.length > 0) {
-        const urlParams = (new URL(document.location)).searchParams;
-        const contractAddress = urlParams.get("contract");
-        console.log(contractAddress);
-        document.getElementById('contractAddress').value = contractAddress
-        const tokenId = urlParams.get("id");
-        console.log(tokenId);
-        document.getElementById('tokenId').value = tokenId;
-    };
+    
 
     // Create Pen Icon
     const penIcon = document.createElement('span');
