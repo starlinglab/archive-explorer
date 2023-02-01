@@ -31,6 +31,7 @@ a:hover {
 #container {
     width:100%;
     margin-top: 1rem;
+    min-height: 70vh;
 }
 input {
     width:auto;
