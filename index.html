@@ -84,10 +84,6 @@
             <input id="tokenType" value="ERC1155" placeholder="Type">
         </div>
         <div class="fill-available">
-            <strong>Lit Key:</strong>
-            <input type="text" id="litKey" /><br>
-        </div>
-        <div class="fill-available">
             <strong>
                 Archive URI: 
             </strong>
@@ -100,8 +96,12 @@
             <input id="archiveDescription">
         </div>
         <div class="fill-available">
+            <strong>Lit Key:</strong>
+            <input type="text" id="litKey" /><br>
+        </div>
+        <div class="fill-available">
             <strong>
-                Access Conditions Name:
+                LIT Access Conditions:
             </strong> 
             <input id="accessConditions"><br>
         </div>
@@ -117,7 +117,7 @@
             </strong> 
         </div>
         <div class="inline-b">
-            <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
+            <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)" disabled="disabled"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
         </div>
         <div class="inline-b">
             <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label for="manualValues">Edit values manually</label></input>
