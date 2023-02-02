@@ -15,4 +15,4 @@ When in the app, to load the asset click `Connect` at the top right corner. You 
 
 ## Animated Walkthrough
 
-![](https://github.com/starlinglab/archive-explorer/blob/feature-readm/assets/walkthrough.gif)
+![](/assets/walkthrough.gif)
