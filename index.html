@@ -136,6 +136,16 @@
         document.getElementById("archiveURI").disabled = !what.checked;
         document.getElementById("accessConditions").disabled = !what.checked;
     }
+    // Archive Description dynamic width
+     var input = document.getElementById('archiveDescription'); // get the input element
+     input.addEventListener('input', resizeInput); // bind the "resizeInput" callback on "input" event
+     resizeInput.call(input); // immediately call the function
+     // resize input function
+     function resizeInput() {
+     this.style.width = this.value.length + "ch";
+     }
+
+
     // Reset button when user changes input
     function resetButton() {
         document.getElementById('hello').value = "Connect";
