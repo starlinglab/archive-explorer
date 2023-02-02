@@ -70,60 +70,74 @@
      </div>
 </div>
 <div id="connect_details" style="display:none; flex-direction: column;">
-    <div id="nft-img-div" class="d-none">
-        <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
-    </div>
-    <div id="TokenStatus"></div>
-    <span class='formText'>
-        <div>
-            <strong>
-                Chain:
-            </strong>
-            <input type="text" id="chainID" value="mumbai" />
-            <strong>
-                Type:
-            </strong>
-            <input id="tokenType" value="ERC1155" placeholder="Type">
+
+    <div id="topDetails">
+        <div id="nft-img-div" class="d-none">
+            <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;">
         </div>
+        <div id="mainDetails">
+            <div>
+                <strong>
+                    Chain:
+                </strong>
+                <input type="text" id="chainID" value="mumbai">
+            </div>
+            <div>
+                <strong>
+                    Type:
+                </strong>
+                <input id="tokenType" value="ERC1155" placeholder="Type">
+            </div>
+            <div>
+                <strong>
+                    Archive Description:
+                </strong> 
+                <input placeholder="Description" id="archiveDescription">
+            </div>
+        </div>
+    </div>
+    
+    <div id="TokenStatus"></div>
+    <span class="formText">
+        
         <div class="fill-available">
             <strong>
                 Archive URI: 
             </strong>
-            <input id="archiveURI">
-        </div>
-        <div class="fill-available">
-            <strong>
-                Archive Description:
-            </strong> 
-            <input id="archiveDescription">
+            <input id="archiveURI" disabled="">
         </div>
         <div class="fill-available">
             <strong>Lit Key:</strong>
-            <input type="text" id="litKey" /><br>
+            <input type="text" id="litKey" disabled=""><br>
         </div>
         <div class="fill-available">
             <strong>
                 LIT Access Conditions:
             </strong> 
-            <input id="accessConditions"><br>
+            <input id="accessConditions" disabled=""><br>
         </div>
-        <div class="fill-available">
-            <strong>
-                IPFS Gateway:
-            </strong> 
-            <input id="ipfsgateway" value="https://ipfs.io"><br>
-        </div>
+        
         <div class="fill-available">
             <strong>
                 Advanced Settings:
             </strong> 
         </div>
-        <div class="inline-b">
-            <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)" disabled="disabled"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
+        <div style="display:flex;flex-direction:row;flex-wrap:wrap;">
+            <div>
+                <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label for="manualValues">Edit values manually</label>
+            </div>
+            <div class="d-none">
+                <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)" disabled="disabled" checked><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label>
+            
+                <strong>
+                    IPFS Gateway:
+                </strong> 
+                <input id="ipfsgateway" value="https://ipfs.io">
+            </div>
         </div>
-        <div class="inline-b">
-            <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label for="manualValues">Edit values manually</label></input>
-        </div>
+<div class="fill-available">
+
+        </div></span>
 
 </div>
 <script src="scripts/chainMapping.js"></script>
@@ -142,8 +156,12 @@
      resizeInput.call(input); // immediately call the function
      // resize input function
      function resizeInput() {
-     this.style.width = this.value.length + "ch";
-     }
+        if (this.value.length < 10) {
+            this.style.width = this.placeholder.length + "ch";
+        } else {
+            this.style.width = this.value.length + "ch";
+        }   
+    }
 
 
     // Reset button when user changes input
