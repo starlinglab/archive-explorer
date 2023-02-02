@@ -15,7 +15,7 @@ When in the app, to load the asset click `Connect` at the top right corner. You 
 
 ## Get an access token
 
-To have a demo `Starling Access Token` sent to your MetaMask address, enter your wallet address in the faucet at https://faucet.starlinglab.org/. This token will be visible in OpenSea's testnet interface and let you decrypt an asset using the archive explorer.
+To have a demo `Starling Access Token` sent to your MetaMask address, enter your wallet address in the faucet at https://faucet.starlinglab.org/. This token will be visible in OpenSea's testnet interface and will let you decrypt an asset using the archive explorer.
 
 ## Animated Walkthrough
 
