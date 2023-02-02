@@ -31,7 +31,7 @@ jobs:
       uses: actions/checkout@master
       
     - run: |
-        ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"        
+        ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
         sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
         npm i --global ipfs-car        
         ipfs-car --pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrapWithDirectory false --verbose --output /tmp/output.car
