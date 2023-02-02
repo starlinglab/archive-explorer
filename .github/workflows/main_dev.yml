@@ -2,11 +2,11 @@ name: Publish IPFS
 on:
   push:
     branches:
-      - master
+      - development
 env:
   WEB3Token: ${{ secrets.WEB3APITOKEN }}
-  HOSTNAME: ${{ secrets.HOSTNAME }}
-  HEPASSWORD: ${{ secrets.HEPASSWORD }}
+  HOSTNAME: ${{ secrets.HOSTNAME_DEV }}
+  HEPASSWORD: ${{ secrets.HEPASSWORD_DEV }}
   DOTOKEN: ${{ secrets.DOTOKEN }}
   DOID: ${{ secrets.DOID }}
   ROOT_PATH: /
@@ -31,9 +31,9 @@ jobs:
       uses: actions/checkout@master
       
     - run: |
-        ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"        
+        ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
         sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
-        npm i --global ipfs-car        
+        npm i --global ipfs-car
         ipfs-car --pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrapWithDirectory false --verbose --output /tmp/output.car
         echo Posting to WEB3
         curl -X POST \
