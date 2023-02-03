@@ -37,9 +37,10 @@ jobs:
         with:
           # Upload entire repository
           path: '.'
-      - run: |
-        ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
-        sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
+      - name: Update Version
+        run: >
+          ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
+          sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
