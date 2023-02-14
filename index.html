@@ -19,33 +19,7 @@
     </style>
 </head>
 <script>
-    const contractAbi = [
-        // Some details about the token
-        "function tokenIdtoCreator(uint256 tokenId) view returns (address)",
-
-
-        "function getLITKey(uint256 tokenId) view returns (string)",
-        "function getArchiveDescription(uint256 tokenId) view returns (string)",
-        "function getAccessCondition(uint256 tokenId) view returns (string)",
-        "function getArchiveURI(uint256 tokenId) view returns (string)",
-        "function safeTransferFrom(address,address,uint256,uint256 amount, bytes data)",
-        "event Minted(address owner,uint256 _tokenId)",
-        "function mint(uint256 amount) returns (address,uint256)",
-        "function tokenCount() public view returns (uint256)",
-
-        "function initializeLIT(uint256 tokenId, string memory ArchiveDescription, string memory LitKey, string memory AccessCondition, string memory ArchiveURI) public",
-
-        // Get the account balance
-        "function balanceOf(address,uint256) view returns (uint)",
-
-
-        // Send some of your tokens to someone else
-        "function transfer(address to, uint amount)",
-
-        // An event triggered whenever anyone transfers to someone else
-        "event Transfer(address indexed from, address indexed to, uint amount)",
-        "function getTokenURI(uint256 tokenId) view returns (string)"
-    ];
+    const contractAbi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"MetadataUpdate","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"owner","type":"address"},{"indexed":false,"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"Minted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"ids","type":"uint256[]"},{"indexed":false,"internalType":"uint256[]","name":"values","type":"uint256[]"}],"name":"TransferBatch","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"TransferSingle","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"value","type":"string"},{"indexed":true,"internalType":"uint256","name":"id","type":"uint256"}],"name":"URI","type":"event"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"id","type":"uint256"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accounts","type":"address[]"},{"internalType":"uint256[]","name":"ids","type":"uint256[]"}],"name":"balanceOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"burnToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"description","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getTokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mintAdditional","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256[]","name":"ids","type":"uint256[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeBatchTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"url","type":"string"}],"name":"setExternalUrl","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"tokenCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdImageUri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoArchiveDescription","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoArchiveName","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoArchiveURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoCollection","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoCreator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoExternalUrl","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoLITAccessCondition","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoLITkey","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoOrganization","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"litKey","type":"string"},{"internalType":"string","name":"litAccessCondition","type":"string"}],"name":"updateLIT","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"archiveName","type":"string"},{"internalType":"string","name":"archiveDescription","type":"string"},{"internalType":"string","name":"archiveURI","type":"string"},{"internalType":"string","name":"imageURI","type":"string"},{"internalType":"string","name":"organization","type":"string"},{"internalType":"string","name":"collection","type":"string"}],"name":"updateToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"uri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}]
 </script>
 
 <body>
@@ -71,7 +45,7 @@
 </div>
 <div id="connect_details" style="display:none; flex-direction: column;">
     <div id="nft-img-div" class="d-none">
-        <img id="nft-img" src="" alt="NFT Image" style="max-width: 125px;" />
+        <img id="nft-img" src="" alt="Token Image" style="max-width: 125px;" />
     </div>
     <div id="TokenStatus"></div>
     <span class='formText'>
@@ -93,10 +67,25 @@
         </div>
         <div class="fill-available">
             <strong>
+                Archive Name:
+            </strong> 
+            <input id="archiveName">
+        </div>
+        <div class="fill-available">
+            <strong>
                 Archive Description:
             </strong> 
             <input id="archiveDescription">
         </div>
+        <div class="fill-available">
+            <strong>
+                Organization/Collection:
+            </strong>
+            <br/> 
+            <input id="archiveOrganization" style="max-width:30%"> / <input id="archiveCollection" style="max-width:30%">
+
+        </div>
+
         <div class="fill-available">
             <strong>Lit Key:</strong>
             <input type="text" id="litKey" /><br>
@@ -232,7 +221,7 @@
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(address, contractAbi, signer);
-        updateState("Reading access token uri" + tokenId,10);
+        updateState("Reading access token uri " + tokenId,10);
 
         // Get image
         const response = await contract.getTokenURI(tokenId);
@@ -268,9 +257,14 @@
         if (  document.getElementById("manualValues").checked==false) {
             updateState("Reading access token metadata",20);
             // Get metadata
-            document.getElementById("litKey").value = await contract.getLITKey(tokenId);
-            document.getElementById("archiveDescription").value = await contract.getArchiveDescription(tokenId);
-            let archiveURI = await contract.getArchiveURI(tokenId);
+            document.getElementById("litKey").value = await contract.tokenIdtoLITkey(tokenId);
+            document.getElementById("archiveDescription").value = await contract.tokenIdtoArchiveDescription(tokenId);
+            document.getElementById("archiveName").value = await contract.tokenIdtoArchiveName(tokenId);
+
+            document.getElementById("archiveCollection").value = await contract.tokenIdtoCollection(tokenId);
+            document.getElementById("archiveOrganization").value = await contract.tokenIdtoOrganization(tokenId);
+
+            let archiveURI = await contract.tokenIdtoArchiveURI(tokenId);
             console.log('before ' + archiveURI);
             // prepend IPFS gateway if IPFS URI
             if (archiveURI.split('://')[0] == 'ipfs') {
@@ -282,7 +276,7 @@
             } else {
                 document.getElementById("archiveURI").value = archiveURI;
             }
-            document.getElementById("accessConditions").value = await contract.getAccessCondition(tokenId);
+            document.getElementById("accessConditions").value = await contract.tokenIdtoLITAccessCondition(tokenId);
 
         } else {
             console.log("Skipping metadata extraction and using manual values");
