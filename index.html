@@ -221,7 +221,7 @@
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(address, contractAbi, signer);
-        updateState("Reading access token uri" + tokenId,10);
+        updateState("Reading access token uri " + tokenId,10);
 
         // Get image
         const response = await contract.getTokenURI(tokenId);
