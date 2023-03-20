@@ -29,8 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-        ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
-        sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
+          ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
+          sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Pages
