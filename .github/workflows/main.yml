@@ -17,7 +17,7 @@ jobs:
     
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         
     steps:
     - name: Use Node.js ${{ matrix.node-version }}
@@ -33,8 +33,8 @@ jobs:
     - run: |
         ver="<div id=\"version\">Archive Explorer version $(date) Commit $(git rev-parse --short HEAD)</div>"
         sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
-        npm i --global ipfs-car        
-        ipfs-car --pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrapWithDirectory false --verbose --output /tmp/output.car
+        npm i --global ipfs-car
+        ipfs-car pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrap false --output /tmp/output.car
         echo Posting to WEB3
         curl -X POST \
           'https://api.web3.storage/car' \

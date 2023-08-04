@@ -181,13 +181,13 @@ li .list-item-object:before {
     margin-top: 0.5rem;
 }
 
-#connection_input input {
+.top_input input {
     margin: 0.25rem;
 }
-#connection_input #contract {
+.top_input #contract {
     width:40%;
 }
-#connection_input #tokenID {
+.top_input #tokenID {
     width:5%;
 }
 
@@ -358,7 +358,7 @@ box-decoration-break: clone;
     margin:1.5rem 0rem;
 }
 
-#contractAddress {
+#contractAddress, #archiveUrl {
     width:45ch;
 }
 #nft-img-div {
