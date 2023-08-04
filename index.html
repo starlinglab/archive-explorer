@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Archive Explorer</title>
     <meta charset="utf-8" />
@@ -19,340 +20,345 @@
     </style>
 </head>
 <script>
-    const contractAbi = [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"account","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"MetadataUpdate","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"address","name":"owner","type":"address"},{"indexed":false,"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"Minted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256[]","name":"ids","type":"uint256[]"},{"indexed":false,"internalType":"uint256[]","name":"values","type":"uint256[]"}],"name":"TransferBatch","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"id","type":"uint256"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"TransferSingle","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"string","name":"value","type":"string"},{"indexed":true,"internalType":"uint256","name":"id","type":"uint256"}],"name":"URI","type":"event"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"uint256","name":"id","type":"uint256"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address[]","name":"accounts","type":"address[]"},{"internalType":"uint256[]","name":"ids","type":"uint256[]"}],"name":"balanceOfBatch","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"uint256","name":"_tokenId","type":"uint256"}],"name":"burnToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"description","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getTokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"account","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"_tokenId","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"mintAdditional","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256[]","name":"ids","type":"uint256[]"},{"internalType":"uint256[]","name":"amounts","type":"uint256[]"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeBatchTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"url","type":"string"}],"name":"setExternalUrl","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"tokenCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdImageUri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoArchiveDescription","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoArchiveName","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoArchiveURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoCollection","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoCreator","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoExternalUrl","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoLITAccessCondition","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoLITkey","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdtoOrganization","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"litKey","type":"string"},{"internalType":"string","name":"litAccessCondition","type":"string"}],"name":"updateLIT","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"archiveName","type":"string"},{"internalType":"string","name":"archiveDescription","type":"string"},{"internalType":"string","name":"archiveURI","type":"string"},{"internalType":"string","name":"imageURI","type":"string"},{"internalType":"string","name":"organization","type":"string"},{"internalType":"string","name":"collection","type":"string"}],"name":"updateToken","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"uri","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"}]
+    const contractAbi = [{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "account", "type": "address" }, { "indexed": true, "internalType": "address", "name": "operator", "type": "address" }, { "indexed": false, "internalType": "bool", "name": "approved", "type": "bool" }], "name": "ApprovalForAll", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "_tokenId", "type": "uint256" }], "name": "MetadataUpdate", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "address", "name": "owner", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "_tokenId", "type": "uint256" }], "name": "Minted", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "operator", "type": "address" }, { "indexed": true, "internalType": "address", "name": "from", "type": "address" }, { "indexed": true, "internalType": "address", "name": "to", "type": "address" }, { "indexed": false, "internalType": "uint256[]", "name": "ids", "type": "uint256[]" }, { "indexed": false, "internalType": "uint256[]", "name": "values", "type": "uint256[]" }], "name": "TransferBatch", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "operator", "type": "address" }, { "indexed": true, "internalType": "address", "name": "from", "type": "address" }, { "indexed": true, "internalType": "address", "name": "to", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "id", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "value", "type": "uint256" }], "name": "TransferSingle", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "string", "name": "value", "type": "string" }, { "indexed": true, "internalType": "uint256", "name": "id", "type": "uint256" }], "name": "URI", "type": "event" }, { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, { "internalType": "uint256", "name": "id", "type": "uint256" }], "name": "balanceOf", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address[]", "name": "accounts", "type": "address[]" }, { "internalType": "uint256[]", "name": "ids", "type": "uint256[]" }], "name": "balanceOfBatch", "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }, { "internalType": "uint256", "name": "_tokenId", "type": "uint256" }], "name": "burnToken", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "description", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }], "name": "getTokenURI", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "account", "type": "address" }, { "internalType": "address", "name": "operator", "type": "address" }], "name": "isApprovedForAll", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "mint", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_tokenId", "type": "uint256" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "mintAdditional", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "name", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "from", "type": "address" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256[]", "name": "ids", "type": "uint256[]" }, { "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }, { "internalType": "bytes", "name": "data", "type": "bytes" }], "name": "safeBatchTransferFrom", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "from", "type": "address" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "id", "type": "uint256" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "bytes", "name": "data", "type": "bytes" }], "name": "safeTransferFrom", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "operator", "type": "address" }, { "internalType": "bool", "name": "approved", "type": "bool" }], "name": "setApprovalForAll", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, { "internalType": "string", "name": "url", "type": "string" }], "name": "setExternalUrl", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }], "name": "supportsInterface", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "tokenCount", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdImageUri", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoArchiveDescription", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoArchiveName", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoArchiveURI", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoCollection", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoCreator", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoExternalUrl", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoLITAccessCondition", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoLITkey", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenIdtoOrganization", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "name": "tokenSupply", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, { "internalType": "string", "name": "litKey", "type": "string" }, { "internalType": "string", "name": "litAccessCondition", "type": "string" }], "name": "updateLIT", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }, { "internalType": "string", "name": "archiveName", "type": "string" }, { "internalType": "string", "name": "archiveDescription", "type": "string" }, { "internalType": "string", "name": "archiveURI", "type": "string" }, { "internalType": "string", "name": "imageURI", "type": "string" }, { "internalType": "string", "name": "organization", "type": "string" }, { "internalType": "string", "name": "collection", "type": "string" }], "name": "updateToken", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "tokenId", "type": "uint256" }], "name": "uri", "outputs": [{ "internalType": "string", "name": "", "type": "string" }], "stateMutability": "view", "type": "function" }]
 </script>
 
 <body>
-<div><h1>Archive Explorer</h1></div>
-<div>
-    <input type="button" id="hello" value="initializing..." disabled />
-
-    <div id="connection_input" class="top_input">
-        <strong>
-            Contract:
-        </strong>
-
-        <input placeholder="Contract Address" id="contractAddress" onchange="resetButton()">
-            
-        <strong>
-                Token:
-        </strong>
-            
-        <input placeholder="Token ID" id="tokenId" style="width:7ch" onchange="resetButton()">
-        
-        <span id="expand_details" style="font-size:2.5rem;"></span><br>
-     </div>
-     <div id="decrypt_input" style="display:none" class="top_input" >
-        <strong>
-            URL:
-        </strong>
-
-        <input placeholder="ipfs://" id="archiveUrl">
-            
-        <strong>
-                Encryption Key:
-        </strong>
-            
-        <input placeholder="Encryption Key" id="encryptionKey" type="password" style="width:20ch">
-        
-        <span id="expand_details" style="font-size:2.5rem;"></span><br>
-     </div>
-
-</div>
-<div id="connect_details" style="display:none; flex-direction: column;">
-    <div id="nft-img-div" class="d-none">
-        <img id="nft-img" src="" alt="Token Image" style="max-width: 125px;" />
+    <div>
+        <h1>Archive Explorer</h1>
     </div>
-    <div id="TokenStatus"></div>
-    <span class='formText'>
-        <div>
-            <strong>
-                Chain:
-            </strong>
-            <input type="text" id="chainID" value="mumbai" />
-            <strong>
-                Type:
-            </strong>
-            <input id="tokenType" value="ERC1155" placeholder="Type">
-        </div>
-        <div class="fill-available">
-            <strong>
-                Archive URI: 
-            </strong>
-            <input id="archiveURI">
-        </div>
-        <div class="fill-available">
-            <strong>
-                Archive Name:
-            </strong> 
-            <input id="archiveName">
-        </div>
-        <div class="fill-available">
-            <strong>
-                Archive Description:
-            </strong> 
-            <input id="archiveDescription">
-        </div>
-        <div class="fill-available">
-            <strong>
-                Organization/Collection:
-            </strong>
-            <br/> 
-            <input id="archiveOrganization" style="max-width:30%"> / <input id="archiveCollection" style="max-width:30%">
+    <div>
+        <input type="button" id="hello" value="initializing..." disabled />
 
+        <div id="connection_input" class="top_input">
+            <strong>
+                Contract:
+            </strong>
+
+            <input placeholder="Contract Address" id="contractAddress" onchange="resetButton()">
+
+            <strong>
+                Token:
+            </strong>
+
+            <input placeholder="Token ID" id="tokenId" style="width:7ch" onchange="resetButton()">
+
+            <span id="expand_details" style="font-size:2.5rem;"></span><br>
+        </div>
+        <div id="decrypt_input" style="display:none" class="top_input">
+            <strong>
+                URL:
+            </strong>
+
+            <input placeholder="ipfs://" id="archiveUrl">
+
+            <strong>
+                Encryption Key:
+            </strong>
+
+            <input placeholder="Encryption Key" id="encryptionKey" type="password" style="width:20ch">
+
+            <span id="expand_details" style="font-size:2.5rem;"></span><br>
         </div>
 
-        <div class="fill-available">
-            <strong>Lit Key:</strong>
-            <input type="text" id="litKey" /><br>
+    </div>
+    <div id="connect_details" style="display:none; flex-direction: column;">
+        <div id="nft-img-div" class="d-none">
+            <img id="nft-img" src="" alt="Token Image" style="max-width: 125px;" />
         </div>
-        <div class="fill-available">
-            <strong>
-                LIT Access Conditions:
-            </strong> 
-            <input id="accessConditions"><br>
-        </div>
-        <div class="fill-available">
-            <strong>
-                IPFS Gateway:
-            </strong> 
-            <input id="ipfsgateway" value="https://ipfs.io"><br>
-        </div>
-        <div class="fill-available">
-            <strong>
-                Advanced Settings:
-            </strong> 
-        </div>
-        <div class="inline-b">
-            <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)" disabled="disabled"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
-        </div>
-        <div class="inline-b">
-            <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label for="manualValues">Edit values manually</label></input>
-        </div>
+        <div id="TokenStatus"></div>
+        <span class='formText'>
+            <div>
+                <strong>
+                    Chain:
+                </strong>
+                <input type="text" id="chainID" value="mumbai" />
+                <strong>
+                    Type:
+                </strong>
+                <input id="tokenType" value="ERC1155" placeholder="Type">
+            </div>
+            <div class="fill-available">
+                <strong>
+                    Archive URI:
+                </strong>
+                <input id="archiveURI">
+            </div>
+            <div class="fill-available">
+                <strong>
+                    Archive Name:
+                </strong>
+                <input id="archiveName">
+            </div>
+            <div class="fill-available">
+                <strong>
+                    Archive Description:
+                </strong>
+                <input id="archiveDescription">
+            </div>
+            <div class="fill-available">
+                <strong>
+                    Organization/Collection:
+                </strong>
+                <br />
+                <input id="archiveOrganization" style="max-width:30%"> / <input id="archiveCollection"
+                    style="max-width:30%">
 
-</div>
-<script src="scripts/chainMapping.js"></script>
-<script src="scripts/utils.js"></script>
-<script>
-    let autoRun = false;
-    urlParams = new URLSearchParams(window.location.search);
-    let AESKey =  urlParams.get("AES");
-    let archiveUrl  =  urlParams.get("archiveUrl");
-   
-    if (AESKey != null || archiveUrl != null ) {
-        document.getElementById('connection_input').style.display = "none";
-        document.getElementById('decrypt_input').style.display="inherit";
-        document.getElementById("encryptionKey").value=AESKey;
-        document.getElementById("archiveUrl").value=archiveUrl;
-    }
-    if (urlParams.get("autorun")) { autoRun=true; }
+            </div>
 
-    function hexStringToUint8Array(hexString) {
-        const result = new Uint8Array(hexString.length / 2);
-        for (let i = 0; i < hexString.length; i += 2) {
-            result[i / 2] = parseInt(hexString.substr(i, 2), 16);
+            <div class="fill-available">
+                <strong>Lit Key:</strong>
+                <input type="text" id="litKey" /><br>
+            </div>
+            <div class="fill-available">
+                <strong>
+                    LIT Access Conditions:
+                </strong>
+                <input id="accessConditions"><br>
+            </div>
+            <div class="fill-available">
+                <strong>
+                    IPFS Gateway:
+                </strong>
+                <input id="ipfsgateway" value="https://ipfs.io"><br>
+            </div>
+            <div class="fill-available">
+                <strong>
+                    Advanced Settings:
+                </strong>
+            </div>
+            <div class="inline-b">
+                <input type="checkbox" id="nativeIpfs" class="css-checkbox" onchange="ui_nativIpfs(this)"
+                    disabled="disabled"><label for="nativeIpfs">Use IPFS gateway for ipfs:// links</label></input>
+            </div>
+            <div class="inline-b">
+                <input type="checkbox" id="manualValues" class="css-checkbox" onchange="ui_manualValues(this)"><label
+                    for="manualValues">Edit values manually</label></input>
+            </div>
+
+    </div>
+    <script src="scripts/chainMapping.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script>
+        let autoRun = false;
+        urlParams = new URLSearchParams(window.location.search);
+        let AESKey = urlParams.get("AES");
+        let archiveUrl = urlParams.get("archiveUrl");
+
+        if (AESKey != null || archiveUrl != null) {
+            document.getElementById('connection_input').style.display = "none";
+            document.getElementById('decrypt_input').style.display = "inherit";
+            document.getElementById("encryptionKey").value = AESKey;
+            document.getElementById("archiveUrl").value = archiveUrl;
         }
-        return result;
-    }
+        if (urlParams.get("autorun")) { autoRun = true; }
 
-    function ui_nativIpfs(what) {
-        //No op
-    }
-    function ui_manualValues(what) {
-        document.getElementById("litKey").disabled = !what.checked;
-        document.getElementById("archiveURI").disabled = !what.checked;
-        document.getElementById("accessConditions").disabled = !what.checked;
-    }
-    // Reset button when user changes input
-    function resetButton() {
-        if (AESKey) {
-            document.getElementById('hello').value = "Decrypt";
-        } else {
-            document.getElementById('hello').value = "Connect";
-        }
-    }
-
-    // Set img icon to expand token details
-    let expandIcon = document.createElement('img');	
-    expandIcon.src = 'assets/icons/expand.png';
-    document.getElementById('expand_details').appendChild(expandIcon);
-
-    
-
-    // Create Pen Icon
-    const penIcon = document.createElement('span');
-    const penIconImg = document.createElement('img');
-    penIconImg.src = 'assets/icons/certificate.png';
-    penIconImg.alt = 'Pen icon';
-    penIconImg.className = 'penIcon';
-    penIcon.appendChild(penIconImg);
-
-    // Create event listener for expandable details
-    const expandDetails = document.getElementById('expand_details');
-    const connectionDetails = document.getElementById('connect_details');
-    expandDetails.firstChild.addEventListener('click', (e) => { // prevent the click event from bubbling up to the list item
-        e.stopPropagation();
-        // toggle the display of the nested list
-        connectionDetails.style.display = (connectionDetails.style.display === 'none') ? 'flex' : 'none';
-    });
-
-    // Lit node client
-    function litLoaded() {
-        LitJsSdk.litJsSdkLoadedInALIT();
-        resetButton()
-        document.getElementById("hello").disabled = false;
-    }
-</script>
-<script onload='litLoaded()' src="https://jscdn.litgateway.com/index.web.js"></script>
-<script type="module">
-    async function updateState(state, percent) {
-        document.getElementById("loading").innerHTML="Loading... (" + state + ")";
-        let count=20*(percent / 100);
-        let g=" ";
-        for (var i=0; i<count; i++) 
-            g=g + ", darkred"            
-        for (var i=count; i<20; i++) 
-            g=g + ", black"
-        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
-    }
-
-    // import ethers
-    import { ethers } from "./scripts/ethers-5.2.esm.min.js";
-
-    // Verify Lit is loaded
-    async function VerifyLit() {
-        await litJsSdkLoaded();
-
-    }
-    // get chain from input
-    function chain() {
-        return document.getElementById("chainID").value;
-    }
-
-    // new lit node client
-    async function litJsSdkLoaded() {
-        let litNodeClient = new LitJsSdk.LitNodeClient();
-        await litNodeClient.connect();
-        window.litNodeClient = litNodeClient;
-
-    }
-
-    // get auth signature
-    async function getAuthSign() {
-        var authSig = await LitJsSdk.checkAndSignAuthMessage({
-            chain: chain(),
-        });
-        return authSig;
-    }
-    async function prepareArchiveURI(archiveURI) {
-        // prepend IPFS gateway if IPFS URI
-        if (archiveURI.split('://')[0] == 'ipfs') {
-            if (document.getElementById("nativeIpfs").checked==false) {
-                archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+        function hexStringToUint8Array(hexString) {
+            const result = new Uint8Array(hexString.length / 2);
+            for (let i = 0; i < hexString.length; i += 2) {
+                result[i / 2] = parseInt(hexString.substr(i, 2), 16);
             }
-            document.getElementById("archiveURI").value = archiveURI;
-            console.log('after ' + archiveURI);
-        } else {
-            document.getElementById("archiveURI").value = archiveURI;
-        }
-        return document.getElementById("archiveURI").value;
-    }
-
-    
-    async function processArchive() {
-        if (AESKey) { 
-            await DecryptArchive();
-        } else {
-            await ReadNFT();
-        }
-    }
-    async function DecryptArchive() {
-        await prepareArchiveURI(document.getElementById("archiveUrl").value);
-        ProcessAsset()
-    }
-    // read NFT and populate UI with its metadata
-    async function ReadNFT() {
-
-        const tokenId = document.getElementById("tokenId").value;
-        const address = document.getElementById("contractAddress").value;
-
-        if (!tokenId || !address || address.length != 42 || address.slice(0, 2).toUpperCase()  != "0X") {
-           alert("Contract Address or Token ID invalid") ;
-           resetButton();
-           return;
+            return result;
         }
 
-        clearInnerHTML();
-        document.getElementById("loading").classList.remove("d-none");
-        updateState("Init",0);
-
-        document.getElementById('hello').value = "Connecting...";
-
-        updateState("Authenticating with LIT",5);
-        await getAuthSign();
-        await VerifyLit();
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(address, contractAbi, signer);
-        updateState("Reading access token uri " + tokenId,10);
-
-        // Get image
-        const response = await contract.getTokenURI(tokenId);
-        const json = atob(response.substring(29));
-        const result = JSON.parse(json);
-        document.getElementById("nft-img-div").classList.remove("d-none");
-        if (result.image_data) {
-            document.getElementById("nft-img").src = result.image_data;
-        } else {
-            document.getElementById("nft-img").src = result.image;
+        function ui_nativIpfs(what) {
+            //No op
+        }
+        function ui_manualValues(what) {
+            document.getElementById("litKey").disabled = !what.checked;
+            document.getElementById("archiveURI").disabled = !what.checked;
+            document.getElementById("accessConditions").disabled = !what.checked;
+        }
+        // Reset button when user changes input
+        function resetButton() {
+            if (AESKey) {
+                document.getElementById('hello').value = "Decrypt";
+            } else {
+                document.getElementById('hello').value = "Connect";
+            }
         }
 
-
-        updateState("Reading access token ownership",15);
-        // Get current account in MetaMask
-        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-        const account = accounts[0]
-        const accountUC = accounts[0].toString().toUpperCase()
+        // Set img icon to expand token details
+        let expandIcon = document.createElement('img');
+        expandIcon.src = 'assets/icons/expand.png';
+        document.getElementById('expand_details').appendChild(expandIcon);
 
 
-        const owner = (await contract.balanceOf(account, tokenId))
-        if (owner == 0) {
-            alert("You do not own the access token required to decrypt this file");
-            updateState("Cannot decrypt, Missing Token",100);
-            resetButton();
-            return false;
-        }
 
+        // Create Pen Icon
+        const penIcon = document.createElement('span');
+        const penIconImg = document.createElement('img');
+        penIconImg.src = 'assets/icons/certificate.png';
+        penIconImg.alt = 'Pen icon';
+        penIconImg.className = 'penIcon';
+        penIcon.appendChild(penIconImg);
 
-        //Only update metadata from token if connectionDetails is not visibile
-        //This will allow advanced users to set their own settings
+        // Create event listener for expandable details
+        const expandDetails = document.getElementById('expand_details');
         const connectionDetails = document.getElementById('connect_details');
-        if (  document.getElementById("manualValues").checked==false) {
-            updateState("Reading access token metadata",20);
-            // Get metadata
-            document.getElementById("litKey").value = await contract.tokenIdtoLITkey(tokenId);
-            document.getElementById("archiveDescription").value = await contract.tokenIdtoArchiveDescription(tokenId);
-            document.getElementById("archiveName").value = await contract.tokenIdtoArchiveName(tokenId);
+        expandDetails.firstChild.addEventListener('click', (e) => { // prevent the click event from bubbling up to the list item
+            e.stopPropagation();
+            // toggle the display of the nested list
+            connectionDetails.style.display = (connectionDetails.style.display === 'none') ? 'flex' : 'none';
+        });
 
-            document.getElementById("archiveCollection").value = await contract.tokenIdtoCollection(tokenId);
-            document.getElementById("archiveOrganization").value = await contract.tokenIdtoOrganization(tokenId);
-
-            let archiveURI = await contract.tokenIdtoArchiveURI(tokenId);
-            console.log('before ' + archiveURI);
-            prepareArchiveURI(archiveURI)
-
-            document.getElementById("accessConditions").value = await contract.tokenIdtoLITAccessCondition(tokenId);
-
-        } else {
-            console.log("Skipping metadata extraction and using manual values");
+        // Lit node client
+        function litLoaded() {
+            LitJsSdk.litJsSdkLoadedInALIT();
+            resetButton()
+            document.getElementById("hello").disabled = false;
         }
-        ProcessAsset();
-    }
+    </script>
+    <script onload='litLoaded()' src="https://jscdn.litgateway.com/index.web.js"></script>
+    <script type="module">
+        async function updateState(state, percent) {
+            document.getElementById("loading").innerHTML = "Loading... (" + state + ")";
+            let count = 20 * (percent / 100);
+            let g = " ";
+            for (var i = 0; i < count; i++)
+                g = g + ", darkred"
+            for (var i = count; i < 20; i++)
+                g = g + ", black"
+            document.getElementById("loading").style.backgroundImage = "linear-gradient(to right" + g + ")";
+        }
 
-    async function ProcessAsset() {
-        //try {
+        // import ethers
+        import { ethers } from "./scripts/ethers-5.2.esm.min.js";
 
-            
+        // Verify Lit is loaded
+        async function VerifyLit() {
+            await litJsSdkLoaded();
+
+        }
+        // get chain from input
+        function chain() {
+            return document.getElementById("chainID").value;
+        }
+
+        // new lit node client
+        async function litJsSdkLoaded() {
+            let litNodeClient = new LitJsSdk.LitNodeClient();
+            await litNodeClient.connect();
+            window.litNodeClient = litNodeClient;
+
+        }
+
+        // get auth signature
+        async function getAuthSign() {
+            var authSig = await LitJsSdk.checkAndSignAuthMessage({
+                chain: chain(),
+            });
+            return authSig;
+        }
+        async function prepareArchiveURI(archiveURI) {
+            // prepend IPFS gateway if IPFS URI
+            if (archiveURI.split('://')[0] == 'ipfs') {
+                if (document.getElementById("nativeIpfs").checked == false) {
+                    archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+                }
+                document.getElementById("archiveURI").value = archiveURI;
+                console.log('after ' + archiveURI);
+            } else {
+                document.getElementById("archiveURI").value = archiveURI;
+            }
+            return document.getElementById("archiveURI").value;
+        }
+
+
+        async function processArchive() {
+            if (AESKey) {
+                await DecryptArchive();
+            } else {
+                await ReadNFT();
+            }
+        }
+        async function DecryptArchive() {
+            await prepareArchiveURI(document.getElementById("archiveUrl").value);
+            ProcessAsset()
+        }
+        // read NFT and populate UI with its metadata
+        async function ReadNFT() {
+
+            const tokenId = document.getElementById("tokenId").value;
+            const address = document.getElementById("contractAddress").value;
+
+            if (!tokenId || !address || address.length != 42 || address.slice(0, 2).toUpperCase() != "0X") {
+                alert("Contract Address or Token ID invalid");
+                resetButton();
+                return;
+            }
+
+            clearInnerHTML();
+            document.getElementById("loading").classList.remove("d-none");
+            updateState("Init", 0);
+
+            document.getElementById('hello').value = "Connecting...";
+
+            updateState("Authenticating with LIT", 5);
+            await getAuthSign();
+            await VerifyLit();
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(address, contractAbi, signer);
+            updateState("Reading access token uri " + tokenId, 10);
+
+            // Get image
+            const response = await contract.getTokenURI(tokenId);
+            const json = atob(response.substring(29));
+            const result = JSON.parse(json);
+            document.getElementById("nft-img-div").classList.remove("d-none");
+            if (result.image_data) {
+                document.getElementById("nft-img").src = result.image_data;
+            } else {
+                document.getElementById("nft-img").src = result.image;
+            }
+
+
+            updateState("Reading access token ownership", 15);
+            // Get current account in MetaMask
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0]
+            const accountUC = accounts[0].toString().toUpperCase()
+
+
+            const owner = (await contract.balanceOf(account, tokenId))
+            if (owner == 0) {
+                alert("You do not own the access token required to decrypt this file");
+                updateState("Cannot decrypt, Missing Token", 100);
+                resetButton();
+                return false;
+            }
+
+
+            //Only update metadata from token if connectionDetails is not visibile
+            //This will allow advanced users to set their own settings
+            const connectionDetails = document.getElementById('connect_details');
+            if (document.getElementById("manualValues").checked == false) {
+                updateState("Reading access token metadata", 20);
+                // Get metadata
+                document.getElementById("litKey").value = await contract.tokenIdtoLITkey(tokenId);
+                document.getElementById("archiveDescription").value = await contract.tokenIdtoArchiveDescription(tokenId);
+                document.getElementById("archiveName").value = await contract.tokenIdtoArchiveName(tokenId);
+
+                document.getElementById("archiveCollection").value = await contract.tokenIdtoCollection(tokenId);
+                document.getElementById("archiveOrganization").value = await contract.tokenIdtoOrganization(tokenId);
+
+                let archiveURI = await contract.tokenIdtoArchiveURI(tokenId);
+                console.log('before ' + archiveURI);
+                prepareArchiveURI(archiveURI)
+
+                document.getElementById("accessConditions").value = await contract.tokenIdtoLITAccessCondition(tokenId);
+
+            } else {
+                console.log("Skipping metadata extraction and using manual values");
+            }
+            ProcessAsset();
+        }
+
+        async function ProcessAsset() {
+            //try {
+
+
             if (!AESKey) {
                 let litKey = document.getElementById("litKey").value;
                 let chainID = document.getElementById("chainID").value;
@@ -363,7 +369,7 @@
             let URL = document.getElementById("archiveURI").value;
 
             // get encrypted data
-            updateState("Downloading archive",25);
+            updateState("Downloading archive", 25);
             let response = await axios.get(URL, { responseType: 'arraybuffer', onDownloadProgress: axiosProgress });
 
             let readBuffer = response.data;
@@ -372,9 +378,9 @@
                 name: "AES-CBC",
                 length: 256
             };
-            let unlockedSymmKey  = undefined;
+            let unlockedSymmKey = undefined;
             if (!AESKey) {
-                updateState("Decrypting - LIT Auth",50);
+                updateState("Decrypting - LIT Auth", 50);
                 // check and sign auth message
                 const authSign = await LitJsSdk.checkAndSignAuthMessage({ chain: chainID });
 
@@ -389,622 +395,622 @@
 
 
 
-            updateState("Decrypting - LIT key decryption",55);
-            
+            updateState("Decrypting - LIT key decryption", 55);
 
-            updateState("Decrypting - Content",60);
+
+            updateState("Decrypting - Content", 60);
             // Decrypt data
             let decryptedBlobArrayBuffer = await LitJsSdk.decryptWithSymmetricKey(new Blob([readBuffer]), unlockedSymmKey);
 
             Loaddata(decryptedBlobArrayBuffer, readBuffer);
 
-        /*} catch (ex) {
-            console.log(ex);
-            if (ex.message == "JSON.parse: unexpected end of data at line 1 column 1 of the JSON data") {
-                alert("Access conditions are incomplete or inacurrate. If using custom values, verify their content or disable manual settings.");
-            } else {
-                alert(ex.message);
+            /*} catch (ex) {
+                console.log(ex);
+                if (ex.message == "JSON.parse: unexpected end of data at line 1 column 1 of the JSON data") {
+                    alert("Access conditions are incomplete or inacurrate. If using custom values, verify their content or disable manual settings.");
+                } else {
+                    alert(ex.message);
+                }
+                resetButton();
+                console.log(ex.stack);
             }
-            resetButton();
-            console.log(ex.stack);
+            */
         }
-        */
-    }
 
-    // event listener for main button
+        // event listener for main button
 
-    document.querySelector('#hello').addEventListener('click', processArchive);
-    if (autoRun) {
-        document.getElementById("hello").style.display="none";
-        processArchive();        
-    }
+        document.querySelector('#hello').addEventListener('click', processArchive);
+        if (autoRun) {
+            document.getElementById("hello").style.display = "none";
+            processArchive();
+        }
 
 
-</script>
+    </script>
 
 
-<div id="container">
-    <div id="loading" class="d-none receiptFont">Loading...</div>
+    <div id="container">
+        <div id="loading" class="d-none receiptFont">Loading...</div>
 
-    <div class="content">
-        <div id="content_metadata">
-            <div id="content_title"></div>
-            <div id="timestamp"></div>
-            <div id="content_details"></div>
-            <div id="content_hashes">
-                <div id="EncryptedArchiveCID"></div>
-                <div id="EncryptedArchiveSHA256"></div>
-                <div id="ArchiveCID"></div>
-                <div id="ArchiveSHA256"></div>
+        <div class="content">
+            <div id="content_metadata">
+                <div id="content_title"></div>
+                <div id="timestamp"></div>
+                <div id="content_details"></div>
+                <div id="content_hashes">
+                    <div id="EncryptedArchiveCID"></div>
+                    <div id="EncryptedArchiveSHA256"></div>
+                    <div id="ArchiveCID"></div>
+                    <div id="ArchiveSHA256"></div>
+                </div>
+
+                <div id="validated_signatures"></div>
             </div>
 
-            <div id="validated_signatures"></div>
+            <div id="custom_attributes"></div>
+            <div id="download_links"></div>
         </div>
-
-        <div id="custom_attributes"></div>
-        <div id="download_links"></div>
+        <div id="image_div" class="d-none">
+            <div id="proofmode_text"></div>
+        </div>
+        <div id="webrecorder_container" class="d-none">
+            <div id="webrecorder"></div>
+            <div id="wacz" class="d-none"></div>
+        </div>
     </div>
-    <div id="image_div" class="d-none">
-        <div id="proofmode_text"></div>
-    </div>
-    <div id="webrecorder_container" class="d-none">
-        <div id="webrecorder"></div>
-        <div id="wacz" class="d-none"></div>
-    </div>
-</div>
 
 
-<script>
-    async function updateState(state,percent) {
-        document.getElementById("loading").innerHTML="Loading... (" + state + ")";
-        let count=20*(percent / 100);
-        let g=" ";
-        for (var i=0; i<count; i++) 
-            g=g + ", darkred"            
-        for (var i=count; i<20; i++) 
-            g=g + ", black"
-        document.getElementById("loading").style.backgroundImage="linear-gradient(to right" + g + ")";
-    }
+    <script>
+        async function updateState(state, percent) {
+            document.getElementById("loading").innerHTML = "Loading... (" + state + ")";
+            let count = 20 * (percent / 100);
+            let g = " ";
+            for (var i = 0; i < count; i++)
+                g = g + ", darkred"
+            for (var i = count; i < 20; i++)
+                g = g + ", black"
+            document.getElementById("loading").style.backgroundImage = "linear-gradient(to right" + g + ")";
+        }
 
-    // load hash library and set containers for UI content
-    const Hash = require('ipfs-only-hash');
+        // load hash library and set containers for UI content
+        const Hash = require('ipfs-only-hash');
 
-    const titleDiv = document.getElementById('content_title');
-    const contentdetailsDiv = document.getElementById('content_details');
-    const timestampDiv = document.getElementById('timestamp');
-    const customDiv = document.getElementById('custom_attributes');
-    const linksDiv = document.getElementById('download_links');
-    const waczTextContainer = document.getElementById('webrecorder');
-    const imageDiv = document.getElementById('image_div');
-    const proofDiv = document.getElementById('proofmode_text');
-    const signatureDiv = document.getElementById('validated_signatures');
-    
-    // Create copy to clipboard button
-    function createCopyButton(id) {
-        const tooltipDiv = document.createElement('div');
-        tooltipDiv.className = 'tooltip';
-        const copyButton = document.createElement('button');
-        tooltipDiv.appendChild(copyButton);
-        copyButton.className = 'btn';
-        const copyButtonIcon = document.createElement('img');
-        copyButtonIcon.src = 'assets/icons/copy.png';
-        copyButton.appendChild(copyButtonIcon);
-        const tooltipText = document.createElement('span');
-        copyButton.appendChild(tooltipText);
-        tooltipText.className = 'tooltiptext';
-        tooltipText.id = id + '_Tooltip';
-        tooltipText.innerHTML = 'Copy to clipboard';
-        copyButton.setAttribute('onclick', 'copyToClipboard("' + id + '")');
-        copyButton.setAttribute('onmouseout', 'tooltipFunction("' + id + '_Tooltip")');
-        return tooltipDiv;
-    }
+        const titleDiv = document.getElementById('content_title');
+        const contentdetailsDiv = document.getElementById('content_details');
+        const timestampDiv = document.getElementById('timestamp');
+        const customDiv = document.getElementById('custom_attributes');
+        const linksDiv = document.getElementById('download_links');
+        const waczTextContainer = document.getElementById('webrecorder');
+        const imageDiv = document.getElementById('image_div');
+        const proofDiv = document.getElementById('proofmode_text');
+        const signatureDiv = document.getElementById('validated_signatures');
 
-    // Copy to clipboard function
-    function copyToClipboard(textID) {
+        // Create copy to clipboard button
+        function createCopyButton(id) {
+            const tooltipDiv = document.createElement('div');
+            tooltipDiv.className = 'tooltip';
+            const copyButton = document.createElement('button');
+            tooltipDiv.appendChild(copyButton);
+            copyButton.className = 'btn';
+            const copyButtonIcon = document.createElement('img');
+            copyButtonIcon.src = 'assets/icons/copy.png';
+            copyButton.appendChild(copyButtonIcon);
+            const tooltipText = document.createElement('span');
+            copyButton.appendChild(tooltipText);
+            tooltipText.className = 'tooltiptext';
+            tooltipText.id = id + '_Tooltip';
+            tooltipText.innerHTML = 'Copy to clipboard';
+            copyButton.setAttribute('onclick', 'copyToClipboard("' + id + '")');
+            copyButton.setAttribute('onmouseout', 'tooltipFunction("' + id + '_Tooltip")');
+            return tooltipDiv;
+        }
 
-        var copyText = document.getElementById(textID);
-        navigator.clipboard.writeText(copyText.textContent);
-        var tooltip = document.getElementById(textID + '_Tooltip');
-        tooltip.innerHTML = "";
-        tooltip.innerHTML = "Copied " + copyText.textContent;
-    }
+        // Copy to clipboard function
+        function copyToClipboard(textID) {
 
-    // Tooltip function to show content was copied
-    function tooltipFunction(tooltipID) {
-        var tooltip = document.getElementById(tooltipID);
-        tooltip.innerHTML = "Copy to clipboard";
-    }
+            var copyText = document.getElementById(textID);
+            navigator.clipboard.writeText(copyText.textContent);
+            var tooltip = document.getElementById(textID + '_Tooltip');
+            tooltip.innerHTML = "";
+            tooltip.innerHTML = "Copied " + copyText.textContent;
+        }
+
+        // Tooltip function to show content was copied
+        function tooltipFunction(tooltipID) {
+            var tooltip = document.getElementById(tooltipID);
+            tooltip.innerHTML = "Copy to clipboard";
+        }
 
 
 
 
-    async function Loaddata(BA, EA) { // Load data from decrypted archive
+        async function Loaddata(BA, EA) { // Load data from decrypted archive
 
-        JSzip = new JSZip();
+            JSzip = new JSZip();
 
-        var proofs = {}
-        var meta_data_recorder = {}
-        var meta_data_content = {}
-        var proofmode_file = "";
+            var proofs = {}
+            var meta_data_recorder = {}
+            var meta_data_content = {}
+            var proofmode_file = "";
 
-        updateState("Processing - Generating IPFS CID", 80);
-        // IPFS Encrypted Archive Hash 
-        const aUint8array = new Uint8Array(EA);
-        const eaBuffer = new Buffer(EA);
-        ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
-        CIDhash = await Hash.of(eaBuffer, ipfsOptions);
-        
-        // IPFS Archive Hash 
-        const aBuffer = new Buffer(BA);
-        ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
-        CidArchiveHash = await Hash.of(aBuffer, ipfsOptions);
-        const ArchiveCID = document.getElementById('ArchiveCID');
-        ArchiveCID.innerHTML += `<strong>Archive</strong> `;
-        const aCidContainer = document.createElement('div');
-        aCidContainer.innerHTML = `<strong>CID:</strong> `;
-        const aCidValue = document.createElement('span');
-        aCidValue.id = 'aCIDvalue';
-        aCidValue.className = 'dataID';
-        aCidValue.innerHTML = CidArchiveHash.toUpperCase();
-        aCidContainer.appendChild(aCidValue);
-        aCidContainer.appendChild(createCopyButton('eaCIDvalue'));
-        ArchiveCID.appendChild(aCidContainer);
+            updateState("Processing - Generating IPFS CID", 80);
+            // IPFS Encrypted Archive Hash 
+            const aUint8array = new Uint8Array(EA);
+            const eaBuffer = new Buffer(EA);
+            ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
+            CIDhash = await Hash.of(eaBuffer, ipfsOptions);
 
-
-        updateState("Processing - Generating SHA256",85);
-        // hash the encrypted archive and add content hash
-        digestMessage(EA).then((digestHex) => {
-            const eaSHA256Container = document.createElement('div');
-            eaSHA256Container.innerHTML = `<strong>SHA256:</strong> `;
-            const eaSHA256Value = document.createElement('span');
-            eaSHA256Value.id = 'eaSHA256value';
-            eaSHA256Value.className = 'dataID';
-            eaSHA256Value.innerHTML = digestHex.toUpperCase();
-            eaSHA256Container.appendChild(eaSHA256Value);
-            eaSHA256Container.appendChild(createCopyButton('eaSHA256value'));
-            const eaSHA256 = document.getElementById('EncryptedArchiveSHA256');
-            eaSHA256.appendChild(eaSHA256Container);
-        });
+            // IPFS Archive Hash 
+            const aBuffer = new Buffer(BA);
+            ipfsOptions = { onlyHash: true, cidVersion: 1, chunker: 'rabin', rawLeaves: true }
+            CidArchiveHash = await Hash.of(aBuffer, ipfsOptions);
+            const ArchiveCID = document.getElementById('ArchiveCID');
+            ArchiveCID.innerHTML += `<strong>Archive</strong> `;
+            const aCidContainer = document.createElement('div');
+            aCidContainer.innerHTML = `<strong>CID:</strong> `;
+            const aCidValue = document.createElement('span');
+            aCidValue.id = 'aCIDvalue';
+            aCidValue.className = 'dataID';
+            aCidValue.innerHTML = CidArchiveHash.toUpperCase();
+            aCidContainer.appendChild(aCidValue);
+            aCidContainer.appendChild(createCopyButton('eaCIDvalue'));
+            ArchiveCID.appendChild(aCidContainer);
 
 
-        updateState("Processing - Reading zip",90);
-        // Load array buffer from response, and read it with JSZip
-        const target_zip = await JSZip.loadAsync(BA);
-
-
-
-        updateState("Processing - Generating SHA256-2",95);
-        // Hash the decrypted archive and add content hash to UI
-        const archiveSHADiv = document.getElementById('ArchiveSHA256');
-        archiveSHADiv.innerHTML = `<strong>SHA256:</strong> `;
-        const contentHashSpan = document.createElement('span');
-        contentHashSpan.className = 'dataID';
-        contentHashSpan.id = 'decryptedcontentHashSpan';
-        // hash the file and add content hash
-        const decryptedBuffer = new Buffer(BA);
-        digestMessage(decryptedBuffer).then((digest) => {
-            console.log('decryptedBuffer hash: ' + digest);
-            contentHashSpan.textContent = digest.toUpperCase();
-            archiveSHADiv.appendChild(contentHashSpan);
-            archiveSHADiv.appendChild(createCopyButton('decryptedcontentHashSpan'));
-        });
-
-        // container for links
-        // create div for each link category 
-        const metadataDiv = document.createElement('div');
-        const recorderDiv = document.createElement('div');
-        const filesDiv = document.createElement('div');
-        // insert text in download link div
-        linksDiv.innerHTML = `<strong>Files</strong>`;
-        const downloadIconFiles = document.createElement('img');
-        downloadIconFiles.classList.add('downloadIcon');
-        // insert expand icon
-        downloadIconFiles.src = 'assets/icons/download.png';
-        linksDiv.appendChild(downloadIconFiles);
-
-        updateState("Processing - Loading Image",100);
-        // Loop through all the files in the zip
-        for (const [key, value] of Object.entries(target_zip.files)) { // and create a link for each file
-            target_zip.file(key).async("blob").then(function (content) {
-                const a = document.createElement("a");
-                a.download = key;
-                a.href = URL.createObjectURL(content);
-                a.classList.add('receiptFont');
-                console.log('key: ' + key);
-                if (key.endsWith('.txt')) {
-                    console.log('detected text file')
-                    a.innerHTML = 'Text';
-                    a.classList.add('receiptFont');
-                    appendText(content);
-                    filesDiv.insertAdjacentElement('afterbegin', a);
-                }
-                if (key.endsWith('.jpg') || key.endsWith('.png')) {
-                    console.log('sending image blob to showSingleImage')
-                    a.innerHTML = 'Image';
-                    a.classList.add('receiptFont');
-                    filesDiv.insertAdjacentElement('afterbegin', a);
-                    if (key.endsWith('.jpg')) {
-                        showSingleImage(content, 'jpg');
-                    }
-                    if (key.endsWith('.png')) {
-                        showSingleImage(content, 'png');
-                    }
-                } else if (value.name.endsWith('.zip') || value.name.endsWith('.wacz')) {
-                    a.innerHTML = 'Content';
-                    a.classList.add('receiptFont');
-                    filesDiv.insertAdjacentElement('afterbegin', a);
-                } else if (value.name.endsWith('meta-content.json')) {
-                    a.innerHTML = 'Content Metadata';
-                    a.classList.add('receiptFont');
-                    metadataDiv.insertAdjacentElement('afterbegin', a);
-                } else if (value.name.endsWith('meta-recorder.json')) {
-                    a.innerHTML = 'Recorder Metadata';
-                    a.classList.add('receiptFont');
-                    recorderDiv.insertAdjacentElement('afterbegin', a)
-                } else if (value.name.endsWith('.ots')) {
-                    if ((value.name.endsWith('.zip.ots') || value.name.endsWith('.png.ots')) || (value.name.endsWith('.jpg.ots')) || value.name.endsWith('.wacz.ots') || value.name.endsWith('.txt.ots')) {
-                        const otsIcon = document.createElement('img');
-                        otsIcon.classList.add('otsIMG');
-                        otsIcon.src = 'assets/icons/timestamp.png';
-                        a.appendChild(otsIcon);
-                        a.innerHTML += '.ots';
-                        filesDiv.insertAdjacentElement('beforeend', a)
-                    }
-                    if (value.name.endsWith('meta-content.json.ots')) {
-                        const otsIcon = document.createElement('img');
-                        otsIcon.classList.add('otsIMG');
-                        otsIcon.src = 'assets/icons/timestamp.png';
-                        a.appendChild(otsIcon);
-                        a.innerHTML += '.ots';
-                        metadataDiv.insertAdjacentElement('beforeend', a)
-                    }
-                    if (value.name.endsWith('meta-recorder.json.ots')) {
-                        const otsIcon = document.createElement('img');
-                        otsIcon.classList.add('otsIMG');
-                        otsIcon.src = 'assets/icons/timestamp.png';
-                        a.appendChild(otsIcon);
-                        a.innerHTML += '.ots';
-                        recorderDiv.insertAdjacentElement('beforeend', a)
-                    }
-                } else if (value.name.endsWith('.authsign')) {
-                    if ((value.name.endsWith('.zip.authsign') || value.name.endsWith('.png.authsign')) || (value.name.endsWith('.wacz.authsign')) || value.name.endsWith('.jpg.authsign') || value.name.endsWith('.txt.authsign')) {
-                        const authsignIcon = document.createElement('img');
-                        authsignIcon.classList.add('authsignIMG');
-                        authsignIcon.src = 'assets/icons/signature.png';
-                        a.appendChild(authsignIcon);
-                        a.innerHTML += '.authsign';
-                        filesDiv.insertAdjacentElement('beforeend', a);
-                    }
-                    if (value.name.endsWith('meta-content.json.authsign')) {
-                        const authsignIcon = document.createElement('img');
-                        authsignIcon.classList.add('authsignIMG');
-                        authsignIcon.src = 'assets/icons/signature.png';
-                        a.appendChild(authsignIcon);
-                        a.innerHTML += '.authsign';
-                        metadataDiv.insertAdjacentElement('beforeend', a);
-                    }
-                    if (value.name.endsWith('meta-recorder.json.authsign')) {
-                        const authsignIcon = document.createElement('img');
-                        authsignIcon.classList.add('authsignIMG');
-                        authsignIcon.src = 'assets/icons/signature.png';
-                        a.appendChild(authsignIcon);
-                        a.innerHTML += '.authsign';
-                        recorderDiv.insertAdjacentElement('beforeend', a);
-                    }
-                }
+            updateState("Processing - Generating SHA256", 85);
+            // hash the encrypted archive and add content hash
+            digestMessage(EA).then((digestHex) => {
+                const eaSHA256Container = document.createElement('div');
+                eaSHA256Container.innerHTML = `<strong>SHA256:</strong> `;
+                const eaSHA256Value = document.createElement('span');
+                eaSHA256Value.id = 'eaSHA256value';
+                eaSHA256Value.className = 'dataID';
+                eaSHA256Value.innerHTML = digestHex.toUpperCase();
+                eaSHA256Container.appendChild(eaSHA256Value);
+                eaSHA256Container.appendChild(createCopyButton('eaSHA256value'));
+                const eaSHA256 = document.getElementById('EncryptedArchiveSHA256');
+                eaSHA256.appendChild(eaSHA256Container);
             });
 
-            linksDiv.appendChild(filesDiv);
 
-            linksDiv.appendChild(metadataDiv);
-
-            linksDiv.appendChild(recorderDiv);
-
-            document.getElementById("loading").classList.add("d-none");
-            document.getElementById('hello').value = "Connected";
-            
-            // Is this file a proof
-            if (key.indexOf("proofs/") > -1) {
-                var proof = key.substr(6);
-                proofs[key] = 1;
-            }
-
-            // extract the hash from the file name
-            if (key.indexOf("-") == -1 && key.indexOf("/") == -1) {
+            updateState("Processing - Reading zip", 90);
+            // Load array buffer from response, and read it with JSZip
+            const target_zip = await JSZip.loadAsync(BA);
 
 
-                hash = key.substr(0, key.indexOf('.'));
-                console.log('hash: ' + hash);
 
+            updateState("Processing - Generating SHA256-2", 95);
+            // Hash the decrypted archive and add content hash to UI
+            const archiveSHADiv = document.getElementById('ArchiveSHA256');
+            archiveSHADiv.innerHTML = `<strong>SHA256:</strong> `;
+            const contentHashSpan = document.createElement('span');
+            contentHashSpan.className = 'dataID';
+            contentHashSpan.id = 'decryptedcontentHashSpan';
+            // hash the file and add content hash
+            const decryptedBuffer = new Buffer(BA);
+            digestMessage(decryptedBuffer).then((digest) => {
+                console.log('decryptedBuffer hash: ' + digest);
+                contentHashSpan.textContent = digest.toUpperCase();
+                archiveSHADiv.appendChild(contentHashSpan);
+                archiveSHADiv.appendChild(createCopyButton('decryptedcontentHashSpan'));
+            });
 
-            }
+            // container for links
+            // create div for each link category 
+            const metadataDiv = document.createElement('div');
+            const recorderDiv = document.createElement('div');
+            const filesDiv = document.createElement('div');
+            // insert text in download link div
+            linksDiv.innerHTML = `<strong>Files</strong>`;
+            const downloadIconFiles = document.createElement('img');
+            downloadIconFiles.classList.add('downloadIcon');
+            // insert expand icon
+            downloadIconFiles.src = 'assets/icons/download.png';
+            linksDiv.appendChild(downloadIconFiles);
 
-            // Is it metadata that is not a proof
-            if (key.indexOf("-") > -1 && key.indexOf("/") == -1) { // is it meta-content file
-                if (key.indexOf("-meta-content") > -1) { // Read content of file from ZIP
-                    content = target_zip.file(key).async("string").then(function (meta_content) {
-                        meta_data_content = JSON.parse(meta_content);
-
-                        // if content contains contentMetadata, and proofmode tag exist
-                        if (("contentMetadata" in meta_data_content && "proofmode" in meta_data_content.contentMetadata.private) || ("private" in meta_data_content && "proofmode" in meta_data_content.private)) { // Get asset filename
-                            console.log('detected proofmode file - opening proofmode');
-                            console.log('key: ' + key);
-                            proofmode_file = key.substr(0, key.indexOf('-')) + ".zip";
-                            console.log('proofmode_file: ' + proofmode_file);
-                            // Read proofmode zip file from
-                            proofmode = target_zip.file(proofmode_file).async("arraybuffer").then(function (proofmode_zip_file) { // Parse proofmode data
-                                setProofmodeImage(proofmode_zip_file);
-                            });
+            updateState("Processing - Loading Image", 100);
+            // Loop through all the files in the zip
+            for (const [key, value] of Object.entries(target_zip.files)) { // and create a link for each file
+                target_zip.file(key).async("blob").then(function (content) {
+                    const a = document.createElement("a");
+                    a.download = key;
+                    a.href = URL.createObjectURL(content);
+                    a.classList.add('receiptFont');
+                    console.log('key: ' + key);
+                    if (key.endsWith('.txt')) {
+                        console.log('detected text file')
+                        a.innerHTML = 'Text';
+                        a.classList.add('receiptFont');
+                        appendText(content);
+                        filesDiv.insertAdjacentElement('afterbegin', a);
+                    }
+                    if (key.endsWith('.jpg') || key.endsWith('.png')) {
+                        console.log('sending image blob to showSingleImage')
+                        a.innerHTML = 'Image';
+                        a.classList.add('receiptFont');
+                        filesDiv.insertAdjacentElement('afterbegin', a);
+                        if (key.endsWith('.jpg')) {
+                            showSingleImage(content, 'jpg');
                         }
-
-                        // if content contains contentMetadata, and wacz tag exist
-                        if ("contentMetadata" in meta_data_content && meta_data_content.contentMetadata.mime == "application/wacz") {
-                            console.log('detected wacz file - opening wacz')
-                            waczTextContainer.innerHTML = 'Webrecorder';
-                            wacz_file = key.substr(0, key.indexOf('-')) + ".wacz";
-                            console.log(wacz_file);
-                            wacz_content = target_zip.file(wacz_file).async("arraybuffer").then(function (waczreplay) {
-                                openWacz(waczreplay);
-                            });
+                        if (key.endsWith('.png')) {
+                            showSingleImage(content, 'png');
                         }
-                        // Load data
-                        loadMetaDataUI(meta_data_content);
-                    });
+                    } else if (value.name.endsWith('.zip') || value.name.endsWith('.wacz')) {
+                        a.innerHTML = 'Content';
+                        a.classList.add('receiptFont');
+                        filesDiv.insertAdjacentElement('afterbegin', a);
+                    } else if (value.name.endsWith('meta-content.json')) {
+                        a.innerHTML = 'Content Metadata';
+                        a.classList.add('receiptFont');
+                        metadataDiv.insertAdjacentElement('afterbegin', a);
+                    } else if (value.name.endsWith('meta-recorder.json')) {
+                        a.innerHTML = 'Recorder Metadata';
+                        a.classList.add('receiptFont');
+                        recorderDiv.insertAdjacentElement('afterbegin', a)
+                    } else if (value.name.endsWith('.ots')) {
+                        if ((value.name.endsWith('.zip.ots') || value.name.endsWith('.png.ots')) || (value.name.endsWith('.jpg.ots')) || value.name.endsWith('.wacz.ots') || value.name.endsWith('.txt.ots')) {
+                            const otsIcon = document.createElement('img');
+                            otsIcon.classList.add('otsIMG');
+                            otsIcon.src = 'assets/icons/timestamp.png';
+                            a.appendChild(otsIcon);
+                            a.innerHTML += '.ots';
+                            filesDiv.insertAdjacentElement('beforeend', a)
+                        }
+                        if (value.name.endsWith('meta-content.json.ots')) {
+                            const otsIcon = document.createElement('img');
+                            otsIcon.classList.add('otsIMG');
+                            otsIcon.src = 'assets/icons/timestamp.png';
+                            a.appendChild(otsIcon);
+                            a.innerHTML += '.ots';
+                            metadataDiv.insertAdjacentElement('beforeend', a)
+                        }
+                        if (value.name.endsWith('meta-recorder.json.ots')) {
+                            const otsIcon = document.createElement('img');
+                            otsIcon.classList.add('otsIMG');
+                            otsIcon.src = 'assets/icons/timestamp.png';
+                            a.appendChild(otsIcon);
+                            a.innerHTML += '.ots';
+                            recorderDiv.insertAdjacentElement('beforeend', a)
+                        }
+                    } else if (value.name.endsWith('.authsign')) {
+                        if ((value.name.endsWith('.zip.authsign') || value.name.endsWith('.png.authsign')) || (value.name.endsWith('.wacz.authsign')) || value.name.endsWith('.jpg.authsign') || value.name.endsWith('.txt.authsign')) {
+                            const authsignIcon = document.createElement('img');
+                            authsignIcon.classList.add('authsignIMG');
+                            authsignIcon.src = 'assets/icons/signature.png';
+                            a.appendChild(authsignIcon);
+                            a.innerHTML += '.authsign';
+                            filesDiv.insertAdjacentElement('beforeend', a);
+                        }
+                        if (value.name.endsWith('meta-content.json.authsign')) {
+                            const authsignIcon = document.createElement('img');
+                            authsignIcon.classList.add('authsignIMG');
+                            authsignIcon.src = 'assets/icons/signature.png';
+                            a.appendChild(authsignIcon);
+                            a.innerHTML += '.authsign';
+                            metadataDiv.insertAdjacentElement('beforeend', a);
+                        }
+                        if (value.name.endsWith('meta-recorder.json.authsign')) {
+                            const authsignIcon = document.createElement('img');
+                            authsignIcon.classList.add('authsignIMG');
+                            authsignIcon.src = 'assets/icons/signature.png';
+                            a.appendChild(authsignIcon);
+                            a.innerHTML += '.authsign';
+                            recorderDiv.insertAdjacentElement('beforeend', a);
+                        }
+                    }
+                });
+
+                linksDiv.appendChild(filesDiv);
+
+                linksDiv.appendChild(metadataDiv);
+
+                linksDiv.appendChild(recorderDiv);
+
+                document.getElementById("loading").classList.add("d-none");
+                document.getElementById('hello').value = "Connected";
+
+                // Is this file a proof
+                if (key.indexOf("proofs/") > -1) {
+                    var proof = key.substr(6);
+                    proofs[key] = 1;
                 }
 
-                if (key.indexOf("-") > -1 && key.indexOf("/") == -1) {
-                    if (key.indexOf("-meta-recorder") > -1) {
-                        content = target_zip.file(key).async("string").then(function (content) {
-                            meta_data_content = JSON.parse(content);
+                // extract the hash from the file name
+                if (key.indexOf("-") == -1 && key.indexOf("/") == -1) {
+
+
+                    hash = key.substr(0, key.indexOf('.'));
+                    console.log('hash: ' + hash);
+
+
+                }
+
+                // Is it metadata that is not a proof
+                if (key.indexOf("-") > -1 && key.indexOf("/") == -1) { // is it meta-content file
+                    if (key.indexOf("-meta-content") > -1) { // Read content of file from ZIP
+                        content = target_zip.file(key).async("string").then(function (meta_content) {
+                            meta_data_content = JSON.parse(meta_content);
+
+                            // if content contains contentMetadata, and proofmode tag exist
+                            if (("contentMetadata" in meta_data_content && "proofmode" in meta_data_content.contentMetadata.private) || ("private" in meta_data_content && "proofmode" in meta_data_content.private)) { // Get asset filename
+                                console.log('detected proofmode file - opening proofmode');
+                                console.log('key: ' + key);
+                                proofmode_file = key.substr(0, key.indexOf('-')) + ".zip";
+                                console.log('proofmode_file: ' + proofmode_file);
+                                // Read proofmode zip file from
+                                proofmode = target_zip.file(proofmode_file).async("arraybuffer").then(function (proofmode_zip_file) { // Parse proofmode data
+                                    setProofmodeImage(proofmode_zip_file);
+                                });
+                            }
+
+                            // if content contains contentMetadata, and wacz tag exist
+                            if ("contentMetadata" in meta_data_content && meta_data_content.contentMetadata.mime == "application/wacz") {
+                                console.log('detected wacz file - opening wacz')
+                                waczTextContainer.innerHTML = 'Webrecorder';
+                                wacz_file = key.substr(0, key.indexOf('-')) + ".wacz";
+                                console.log(wacz_file);
+                                wacz_content = target_zip.file(wacz_file).async("arraybuffer").then(function (waczreplay) {
+                                    openWacz(waczreplay);
+                                });
+                            }
+                            // Load data
                             loadMetaDataUI(meta_data_content);
                         });
                     }
-                }
 
-            }
-
-
-
-        }
-    }
-    function loadMetaDataUI(content) {
-        console.log(content);
-        // Get divs
-        const parentDiv = document.getElementById('content_metadata');
-
-
-        // CONTENT METADATA
-        if ("name" && "description" in content) {
-            content["contentMetadata"] = content;
-            console.log('new content; ' + content);
-        }
-
-        if ("contentMetadata" in content) { // NAME & DESCRIPTION
-            titleDiv.appendChild(createDiv("nameDesc", content.contentMetadata.name, content.contentMetadata.description));
-
-
-            // TIMESTAMP
-            timestampDiv.innerHTML += `<strong>Date Created:</strong> ` + new Date(content.contentMetadata.timestamp);
-
-
-            // AUTHOR
-            contentdetailsDiv.innerHTML += `<strong>Author:</strong> <a href="` + content.contentMetadata.author.identifier + `" target="_blank">` + content.contentMetadata.author.name + `</a>`;
-
-            // MIME TYPE
-            contentdetailsDiv.innerHTML += `<br><strong>Mime Type:</strong> ` + content.contentMetadata.mime;
-
-            // SourceId
-            if (content.contentMetadata.sourceId !== undefined) {
-                contentdetailsDiv.innerHTML += `<br><strong>Source ID:</strong> ` + content.contentMetadata.sourceId.key + ": " + content.contentMetadata.sourceId.value;
-            }
-
-            // CID HASH
-            const encryptedArchiveCID = document.getElementById('EncryptedArchiveCID');
-            encryptedArchiveCID.innerHTML += `<strong>Encrypted Archive</strong> `;
-            const eaCidContainer = document.createElement('div');
-            eaCidContainer.innerHTML = `<strong>CID:</strong> `;
-            const eaCidValue = document.createElement('span');
-            eaCidValue.id = 'eaCIDvalue';
-            eaCidValue.className = 'dataID';
-            eaCidValue.innerHTML = CIDhash.toUpperCase();
-            eaCidContainer.appendChild(eaCidValue);
-            eaCidContainer.appendChild(createCopyButton('eaCIDvalue'));
-            encryptedArchiveCID.appendChild(eaCidContainer);
-
-
-            // VALIDATED SIGNATURES
-            if (content.contentMetadata.validatedSignatures !== undefined) {
-                signatureDiv.innerHTML += `<strong>Validated Root of Trust</strong> `;
-                for (var i = 0; i < content.contentMetadata.validatedSignatures.length; i++) {
-                    const newIcon = document.importNode(penIcon, true);
-                    const detailsDiv = document.createElement('div');
-                    detailsDiv.id = 'validated_signatures_details' + i;
-                    detailsDiv.innerHTML = content.contentMetadata.validatedSignatures[i].algorithm + ' (' + content.contentMetadata.validatedSignatures[i].provider + ')';
-                    const json = JSON.stringify(content.contentMetadata.validatedSignatures[i]);
-                    const signatureUrl = URL.createObjectURL(new Blob([json], { type: "application/json" }));
-                    detailsDiv.appendChild(newIcon);
-                    newIcon.onclick = function () {
-                        window.open(signatureUrl, '_blank', 'height=500,width=500');
+                    if (key.indexOf("-") > -1 && key.indexOf("/") == -1) {
+                        if (key.indexOf("-meta-recorder") > -1) {
+                            content = target_zip.file(key).async("string").then(function (content) {
+                                meta_data_content = JSON.parse(content);
+                                loadMetaDataUI(meta_data_content);
+                            });
+                        }
                     }
-                    signatureDiv.appendChild(detailsDiv);
+
                 }
+
+
+
+            }
+        }
+        function loadMetaDataUI(content) {
+            console.log(content);
+            // Get divs
+            const parentDiv = document.getElementById('content_metadata');
+
+
+            // CONTENT METADATA
+            if ("name" && "description" in content) {
+                content["contentMetadata"] = content;
+                console.log('new content; ' + content);
             }
 
+            if ("contentMetadata" in content) { // NAME & DESCRIPTION
+                titleDiv.appendChild(createDiv("nameDesc", content.contentMetadata.name, content.contentMetadata.description));
 
-            // Custom Attributes : Private & Extras
-            if (content.contentMetadata.private !== undefined || content.contentMetadata.extras !== undefined) {
 
-                // Create Custom Attributes Div
-                customDiv.innerHTML = `<strong>Custom Attributes:</strong> `;
-                const buttonsDiv = document.createElement('div');
-                buttonsDiv.className = "btn-group";
-                customDiv.appendChild(buttonsDiv);
+                // TIMESTAMP
+                timestampDiv.innerHTML += `<strong>Date Created:</strong> ` + new Date(content.contentMetadata.timestamp);
 
-                // Create Private Button
-                const privateButton = document.createElement('button');
-                privateButton.textContent = "Private";
-                privateButton.className = "jsonButton";
 
-                // If Private exists, create URL from Private JSON data, else create empty JSON
-                const privateURL = (() => {
-                    if (content.contentMetadata.private)
-                        return URL.createObjectURL(new Blob([JSON.stringify(content.contentMetadata.private)], { type: "application/json" }))
-                    else
-                        return URL.createObjectURL(new Blob([JSON.stringify({})], { type: "application/json" }))
-                })();
-               
-                // Add click event to Private Button
-                privateButton.onclick = function () {
-                    window.open(privateURL, '_blank', 'height=500,width=500')
+                // AUTHOR
+                contentdetailsDiv.innerHTML += `<strong>Author:</strong> <a href="` + content.contentMetadata.author.identifier + `" target="_blank">` + content.contentMetadata.author.name + `</a>`;
+
+                // MIME TYPE
+                contentdetailsDiv.innerHTML += `<br><strong>Mime Type:</strong> ` + content.contentMetadata.mime;
+
+                // SourceId
+                if (content.contentMetadata.sourceId !== undefined) {
+                    contentdetailsDiv.innerHTML += `<br><strong>Source ID:</strong> ` + content.contentMetadata.sourceId.key + ": " + content.contentMetadata.sourceId.value;
+                }
+
+                // CID HASH
+                const encryptedArchiveCID = document.getElementById('EncryptedArchiveCID');
+                encryptedArchiveCID.innerHTML += `<strong>Encrypted Archive</strong> `;
+                const eaCidContainer = document.createElement('div');
+                eaCidContainer.innerHTML = `<strong>CID:</strong> `;
+                const eaCidValue = document.createElement('span');
+                eaCidValue.id = 'eaCIDvalue';
+                eaCidValue.className = 'dataID';
+                eaCidValue.innerHTML = CIDhash.toUpperCase();
+                eaCidContainer.appendChild(eaCidValue);
+                eaCidContainer.appendChild(createCopyButton('eaCIDvalue'));
+                encryptedArchiveCID.appendChild(eaCidContainer);
+
+
+                // VALIDATED SIGNATURES
+                if (content.contentMetadata.validatedSignatures !== undefined) {
+                    signatureDiv.innerHTML += `<strong>Validated Root of Trust</strong> `;
+                    for (var i = 0; i < content.contentMetadata.validatedSignatures.length; i++) {
+                        const newIcon = document.importNode(penIcon, true);
+                        const detailsDiv = document.createElement('div');
+                        detailsDiv.id = 'validated_signatures_details' + i;
+                        detailsDiv.innerHTML = content.contentMetadata.validatedSignatures[i].algorithm + ' (' + content.contentMetadata.validatedSignatures[i].provider + ')';
+                        const json = JSON.stringify(content.contentMetadata.validatedSignatures[i]);
+                        const signatureUrl = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+                        detailsDiv.appendChild(newIcon);
+                        newIcon.onclick = function () {
+                            window.open(signatureUrl, '_blank', 'height=500,width=500');
+                        }
+                        signatureDiv.appendChild(detailsDiv);
+                    }
+                }
+
+
+                // Custom Attributes : Private & Extras
+                if (content.contentMetadata.private !== undefined || content.contentMetadata.extras !== undefined) {
+
+                    // Create Custom Attributes Div
+                    customDiv.innerHTML = `<strong>Custom Attributes:</strong> `;
+                    const buttonsDiv = document.createElement('div');
+                    buttonsDiv.className = "btn-group";
+                    customDiv.appendChild(buttonsDiv);
+
+                    // Create Private Button
+                    const privateButton = document.createElement('button');
+                    privateButton.textContent = "Private";
+                    privateButton.className = "jsonButton";
+
+                    // If Private exists, create URL from Private JSON data, else create empty JSON
+                    const privateURL = (() => {
+                        if (content.contentMetadata.private)
+                            return URL.createObjectURL(new Blob([JSON.stringify(content.contentMetadata.private)], { type: "application/json" }))
+                        else
+                            return URL.createObjectURL(new Blob([JSON.stringify({})], { type: "application/json" }))
+                    })();
+
+                    // Add click event to Private Button
+                    privateButton.onclick = function () {
+                        window.open(privateURL, '_blank', 'height=500,width=500')
+                    };
+                    // Append Private Button to Custom Attributes Div
+                    buttonsDiv.appendChild(privateButton);
+
+                    // Create Public Button
+                    const publicButton = document.createElement('button');
+                    publicButton.textContent = "Public";
+                    publicButton.className = "jsonButton";
+
+                    // If Extras exist, create URL from Extras JSON data, else create empty JSON
+                    const publicURL = (() => {
+                        if (content.contentMetadata.extras)
+                            return URL.createObjectURL(new Blob([JSON.stringify(content.contentMetadata.extras)], { type: "application/json" }))
+                        else
+                            return URL.createObjectURL(new Blob([JSON.stringify({})], { type: "application/json" }))
+                    })();
+
+                    // Add click event to Public Button
+                    publicButton.onclick = function () {
+                        window.open(publicURL, '_blank', 'height=500,width=500')
+                    };
+                    buttonsDiv.appendChild(publicButton);
                 };
-                // Append Private Button to Custom Attributes Div
-                buttonsDiv.appendChild(privateButton);
 
-                // Create Public Button
-                const publicButton = document.createElement('button');
-                publicButton.textContent = "Public";
-                publicButton.className = "jsonButton";
+                // check if proofmode is present
+                if ("proofmode" in content.contentMetadata.private) {
+                    console.log('proofmode found');
+                    imageDiv.appendChild(proofDiv);
+                    proofDiv.innerHTML += 'ProofMode';
+                }
+                if (content.contentMetadata.private.starlingCapture !== undefined) {
+                    imageDiv.appendChild(proofDiv);
+                    console.log('starlingCapture found');
+                    proofDiv.innerHTML += 'Starling Capture';
+                }
 
-                // If Extras exist, create URL from Extras JSON data, else create empty JSON
-                const publicURL = (() => {
-                    if (content.contentMetadata.extras)
-                        return URL.createObjectURL(new Blob([JSON.stringify(content.contentMetadata.extras)], { type: "application/json" }))
-                    else
-                        return URL.createObjectURL(new Blob([JSON.stringify({})], { type: "application/json" }))
-                })();
-                
-                // Add click event to Public Button
-                publicButton.onclick = function () {
-                    window.open(publicURL, '_blank', 'height=500,width=500')
-                };
-                buttonsDiv.appendChild(publicButton);
+                const mainContainer = document.getElementById("container");
+                mainContainer.classList.remove("d-none");
+                mainContainer.classList.add("d-flex");
+            }
+
+        }
+        async function openWacz(wacz_content) {
+
+            blob = new Blob([new Uint8Array(wacz_content)], { type: 'application/wacz' });
+            var url = URL.createObjectURL(blob);
+            x = document.getElementById("wacz");
+            y = document.getElementById("webrecorder_container");
+            x.classList.remove("d-none");
+            y.classList.remove("d-none");
+            x.innerHTML = '<replay-web-page source="' + url + '" embed="replay-with-info" id="wacz2"></replay-web-page>';
+        }
+
+        async function setProofmodeImage(content) {
+            // image div is doc by default
+            console.log('setProofmodeImage called');
+            doc = document.getElementById("image_div");
+
+            // check if content is a zip file
+
+
+            JSzip = new JSZip();
+            await JSZip.loadAsync(content).then(function (zip) {
+
+
+                for (const [key, value] of Object.entries(zip.files)) {
+                    if (key.substring(key.length - 3).toLowerCase() == "jpg") {
+
+                        content = zip.file(key).async("arraybuffer").then(function (content) {
+                            jpg = "data:image/jpeg;base64," + arrayBufferToBase64(content);
+                            image = document.createElement("img");
+                            image.className = "image_view";
+                            image.src = jpg;
+                            doc.classList.remove("d-none");
+
+                            doc.appendChild(image);
+                        });
+                    }
+                }
+            });
+        };
+        async function appendText(content) {
+            doc = document.getElementById("image_div");
+            var reader = new FileReader();
+            reader.readAsText(content);
+            reader.onload = function () {
+                var text = reader.result;
+                doc.classList.remove("d-none");
+                doc.innerHTML = text;
+            }
+        }
+
+        async function showSingleImage(content, type) {
+            doc = document.getElementById("image_div");
+            // if it is not a zip file, display the image
+            console.log('not a zip file')
+            console.log('content and type: ' + content + ' ' + typeof content);
+            var content_keys = Object.keys(content);
+            console.log('content keys: ' + content_keys);
+            for (const key in content_keys) {
+                console.log('key: ' + key + ' value: ' + content[key]);
+            }
+
+            let reader = new FileReader();
+            reader.readAsDataURL(content); // converts the blob to base64 and calls onload
+
+            reader.onload = function () {
+                console.log('reader result: ' + reader.result);
+                console.log('reader.result type: ' + typeof reader.result);
+                if (type === "jpg") {
+                    imageData = "data:image/jpeg;base64," + reader.result.split(',')[1];
+                }
+                else if (type === "png") {
+                    imageData = "data:image/png;base64," + reader.result.split(',')[1];
+                }
+                image = document.createElement("img");
+                image.className = "image_view";
+                image.src = imageData;
+                doc.classList.remove("d-none");
+                doc.appendChild(image);
             };
 
-            // check if proofmode is present
-            if ("proofmode" in content.contentMetadata.private) {
-                console.log('proofmode found');
-                imageDiv.appendChild(proofDiv);
-                proofDiv.innerHTML += 'ProofMode';
-            }
-            if (content.contentMetadata.private.starlingCapture !== undefined) {
-                imageDiv.appendChild(proofDiv);
-                console.log('starlingCapture found');
-                proofDiv.innerHTML += 'Starling Capture';
-            }
-
-            const mainContainer = document.getElementById("container");
-            mainContainer.classList.remove("d-none");
-            mainContainer.classList.add("d-flex");
         }
 
-    }
-    async function openWacz(wacz_content) {
 
-        blob = new Blob([new Uint8Array(wacz_content)], { type: 'application/wacz' });
-        var url = URL.createObjectURL(blob);
-        x = document.getElementById("wacz");
-        y = document.getElementById("webrecorder_container");
-        x.classList.remove("d-none");
-        y.classList.remove("d-none");
-        x.innerHTML = '<replay-web-page source="' + url + '" embed="replay-with-info" id="wacz2"></replay-web-page>';
-    }
-
-    async function setProofmodeImage(content) {
-        // image div is doc by default
-        console.log('setProofmodeImage called');
-        doc = document.getElementById("image_div");
-
-        // check if content is a zip file
-
-
-        JSzip = new JSZip();
-        await JSZip.loadAsync(content).then(function (zip) {
-
-
-            for (const [key, value] of Object.entries(zip.files)) {
-                if (key.substring(key.length - 3).toLowerCase() == "jpg") {
-
-                    content = zip.file(key).async("arraybuffer").then(function (content) {
-                        jpg = "data:image/jpeg;base64," + arrayBufferToBase64(content);
-                        image = document.createElement("img");
-                        image.className = "image_view";
-                        image.src = jpg;
-                        doc.classList.remove("d-none");
-
-                        doc.appendChild(image);
-                    });
-                }
-            }
-        });
-    };
-    async function appendText(content) {
-        doc = document.getElementById("image_div");
-        var reader = new FileReader();
-        reader.readAsText(content);
-        reader.onload = function () {
-            var text = reader.result;
-            doc.classList.remove("d-none");
-            doc.innerHTML = text;
-        }
-    }
-
-    async function showSingleImage(content, type) {
-        doc = document.getElementById("image_div");
-        // if it is not a zip file, display the image
-        console.log('not a zip file')
-        console.log('content and type: ' + content + ' ' + typeof content);
-        var content_keys = Object.keys(content);
-        console.log('content keys: ' + content_keys);
-        for (const key in content_keys) {
-            console.log('key: ' + key + ' value: ' + content[key]);
+        function clearInnerHTML() {
+            titleDiv.innerHTML = "";
+            timestampDiv.innerHTML = "";
+            contentdetailsDiv.innerHTML = "";
+            customDiv.innerHTML = "";
+            linksDiv.innerHTML = "";
+            imageDiv.innerHTML = "";
+            imageDiv.className = "d-none";
+            proofDiv.innerHTML = "";
+            waczTextContainer.innerHTML = "";
+            signatureDiv.innerHTML = "";
+            document.getElementById("ArchiveSHA256").innerHTML = "";
+            document.getElementById("ArchiveCID").innerHTML = "";
+            document.getElementById("EncryptedArchiveSHA256").innerHTML = "";
+            document.getElementById("EncryptedArchiveCID").innerHTML = "";
+            document.getElementById("wacz").className = "d-none";
+            document.getElementById("webrecorder_container").className = "d-none";
         }
 
-        let reader = new FileReader();
-        reader.readAsDataURL(content); // converts the blob to base64 and calls onload
+        ui_manualValues(false);
+        ui_nativIpfs(false);
 
-        reader.onload = function () {
-            console.log('reader result: ' + reader.result);
-            console.log('reader.result type: ' + typeof reader.result);
-            if (type === "jpg") {
-                imageData = "data:image/jpeg;base64," + reader.result.split(',')[1];
-            }
-            else if (type === "png") {
-                imageData = "data:image/png;base64," + reader.result.split(',')[1];
-            }
-            image = document.createElement("img");
-            image.className = "image_view";
-            image.src = imageData;
-            doc.classList.remove("d-none");
-            doc.appendChild(image);
-        };
-
-    }
-
-
-    function clearInnerHTML() {
-        titleDiv.innerHTML = "";
-        timestampDiv.innerHTML = "";
-        contentdetailsDiv.innerHTML = "";
-        customDiv.innerHTML = "";
-        linksDiv.innerHTML = "";
-        imageDiv.innerHTML = "";
-        imageDiv.className = "d-none";
-        proofDiv.innerHTML = "";
-        waczTextContainer.innerHTML = "";
-        signatureDiv.innerHTML = "";
-        document.getElementById("ArchiveSHA256").innerHTML = "";
-        document.getElementById("ArchiveCID").innerHTML = "";
-        document.getElementById("EncryptedArchiveSHA256").innerHTML = "";
-        document.getElementById("EncryptedArchiveCID").innerHTML = "";
-        document.getElementById("wacz").className = "d-none";
-        document.getElementById("webrecorder_container").className = "d-none";
-    }
-
-    ui_manualValues(false);
-    ui_nativIpfs(false);
-
-</script>
-<!--VERSION PLACEHOLDER-->
+    </script>
+    <!--VERSION PLACEHOLDER-->
 </body>
 
 </html>
