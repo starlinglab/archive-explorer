@@ -275,6 +275,7 @@
         async function DecryptArchive() {
             await prepareArchiveURI(document.getElementById("archiveUrl").value);
             ProcessAsset()
+            document.getElementById('hello').style.display = "none";
         }
         // read NFT and populate UI with its metadata
         async function ReadNFT() {
