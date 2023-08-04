@@ -392,10 +392,11 @@
 
                 await litNodeClient.connect();
                 const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
-                unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
+                unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);                
             } else {
                 updateState("Decrypting", 50);
                 unlockedSymmKey = await crypto.subtle.importKey("raw", hexStringToUint8Array(AESKey), SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
+                document.getElementById("hello").style.display="none";
             }
 
 
