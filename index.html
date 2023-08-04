@@ -27,7 +27,7 @@
 <div>
     <input type="button" id="hello" value="initializing..." disabled />
 
-    <div id="connection_input">
+    <div id="connection_input" class="top_input">
         <strong>
             Contract:
         </strong>
@@ -42,6 +42,22 @@
         
         <span id="expand_details" style="font-size:2.5rem;"></span><br>
      </div>
+     <div id="decrypt_input" style="display:none" class="top_input" >
+        <strong>
+            URL:
+        </strong>
+
+        <input placeholder="ipfs://" id="archiveUrl">
+            
+        <strong>
+                Encryption Key:
+        </strong>
+            
+        <input placeholder="Encryption Key" id="encryptionKey" type="password" style="width:20ch">
+        
+        <span id="expand_details" style="font-size:2.5rem;"></span><br>
+     </div>
+
 </div>
 <div id="connect_details" style="display:none; flex-direction: column;">
     <div id="nft-img-div" class="d-none">
@@ -118,6 +134,27 @@
 <script src="scripts/chainMapping.js"></script>
 <script src="scripts/utils.js"></script>
 <script>
+    let autoRun = false;
+    urlParams = new URLSearchParams(window.location.search);
+    let AESKey =  urlParams.get("AES");
+    let archiveUrl  =  urlParams.get("archiveUrl");
+   
+    if (AESKey != null || archiveUrl != null ) {
+        document.getElementById('connection_input').style.display = "none";
+        document.getElementById('decrypt_input').style.display="inherit";
+        document.getElementById("encryptionKey").value=AESKey;
+        document.getElementById("archiveUrl").value=archiveUrl;
+    }
+    if (urlParams.get("autorun")) { autoRun=true; }
+
+    function hexStringToUint8Array(hexString) {
+        const result = new Uint8Array(hexString.length / 2);
+        for (let i = 0; i < hexString.length; i += 2) {
+            result[i / 2] = parseInt(hexString.substr(i, 2), 16);
+        }
+        return result;
+    }
+
     function ui_nativIpfs(what) {
         //No op
     }
@@ -128,7 +165,11 @@
     }
     // Reset button when user changes input
     function resetButton() {
-        document.getElementById('hello').value = "Connect";
+        if (AESKey) {
+            document.getElementById('hello').value = "Decrypt";
+        } else {
+            document.getElementById('hello').value = "Connect";
+        }
     }
 
     // Set img icon to expand token details
@@ -158,7 +199,7 @@
     // Lit node client
     function litLoaded() {
         LitJsSdk.litJsSdkLoadedInALIT();
-        document.getElementById("hello").value = 'connect';
+        resetButton()
         document.getElementById("hello").disabled = false;
     }
 </script>
@@ -203,7 +244,32 @@
         });
         return authSig;
     }
+    async function prepareArchiveURI(archiveURI) {
+        // prepend IPFS gateway if IPFS URI
+        if (archiveURI.split('://')[0] == 'ipfs') {
+            if (document.getElementById("nativeIpfs").checked==false) {
+                archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
+            }
+            document.getElementById("archiveURI").value = archiveURI;
+            console.log('after ' + archiveURI);
+        } else {
+            document.getElementById("archiveURI").value = archiveURI;
+        }
+        return document.getElementById("archiveURI").value;
+    }
 
+    
+    async function processArchive() {
+        if (AESKey) { 
+            await DecryptArchive();
+        } else {
+            await ReadNFT();
+        }
+    }
+    async function DecryptArchive() {
+        await prepareArchiveURI(document.getElementById("archiveUrl").value);
+        ProcessAsset()
+    }
     // read NFT and populate UI with its metadata
     async function ReadNFT() {
 
@@ -273,16 +339,8 @@
 
             let archiveURI = await contract.tokenIdtoArchiveURI(tokenId);
             console.log('before ' + archiveURI);
-            // prepend IPFS gateway if IPFS URI
-            if (archiveURI.split('://')[0] == 'ipfs') {
-                if (document.getElementById("nativeIpfs").checked==false) {
-                    archiveURI = document.getElementById("ipfsgateway").value + '/ipfs/' + archiveURI.split('://')[1];
-                }
-                document.getElementById("archiveURI").value = archiveURI;
-                console.log('after ' + archiveURI);
-            } else {
-                document.getElementById("archiveURI").value = archiveURI;
-            }
+            prepareArchiveURI(archiveURI)
+
             document.getElementById("accessConditions").value = await contract.tokenIdtoLITAccessCondition(tokenId);
 
         } else {
@@ -292,14 +350,17 @@
     }
 
     async function ProcessAsset() {
-        try {
+        //try {
 
+            
+            if (!AESKey) {
+                let litKey = document.getElementById("litKey").value;
+                let chainID = document.getElementById("chainID").value;
+                let accessData = document.getElementById("accessConditions").value;
+                let accessConditions = JSON.parse(accessData);
+            }
             // get values from UI
             let URL = document.getElementById("archiveURI").value;
-            let litKey = document.getElementById("litKey").value;
-            let chainID = document.getElementById("chainID").value;
-            let accessData = document.getElementById("accessConditions").value;
-            let accessConditions = JSON.parse(accessData);
 
             // get encrypted data
             updateState("Downloading archive",25);
@@ -307,22 +368,29 @@
 
             let readBuffer = response.data;
 
-            updateState("Decrypting - LIT Auth",50);
-            // check and sign auth message
-            const authSign = await LitJsSdk.checkAndSignAuthMessage({ chain: chainID });
-
-            let litNodeClient = new LitJsSdk.LitNodeClient({ alertWhenUnauthorized: false });
-
-            await litNodeClient.connect();
-
             const SYMM_KEY_ALGO_PARAMS = {
                 name: "AES-CBC",
                 length: 256
             };
+            let unlockedSymmKey  = undefined;
+            if (!AESKey) {
+                updateState("Decrypting - LIT Auth",50);
+                // check and sign auth message
+                const authSign = await LitJsSdk.checkAndSignAuthMessage({ chain: chainID });
+
+                let litNodeClient = new LitJsSdk.LitNodeClient({ alertWhenUnauthorized: false });
+
+                await litNodeClient.connect();
+                const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
+                unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
+            } else {
+                unlockedSymmKey = await crypto.subtle.importKey("raw", hexStringToUint8Array(AESKey), SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
+            }
+
+
 
             updateState("Decrypting - LIT key decryption",55);
-            const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
-            const unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
+            
 
             updateState("Decrypting - Content",60);
             // Decrypt data
@@ -330,7 +398,7 @@
 
             Loaddata(decryptedBlobArrayBuffer, readBuffer);
 
-        } catch (ex) {
+        /*} catch (ex) {
             console.log(ex);
             if (ex.message == "JSON.parse: unexpected end of data at line 1 column 1 of the JSON data") {
                 alert("Access conditions are incomplete or inacurrate. If using custom values, verify their content or disable manual settings.");
@@ -340,10 +408,16 @@
             resetButton();
             console.log(ex.stack);
         }
+        */
     }
 
     // event listener for main button
-    document.querySelector('#hello').addEventListener('click', ReadNFT);
+
+    document.querySelector('#hello').addEventListener('click', processArchive);
+    if (autoRun) {
+        document.getElementById("hello").style.display="none";
+        processArchive();        
+    }
 
 
 </script>
