@@ -356,14 +356,18 @@
         }
 
         async function ProcessAsset() {
-            //try {
+            try {
 
+            let litKey = undefined;
+            let chainID = undefined;
+            let accessData = undefined;
+            let accessConditions = undefined;
 
             if (!AESKey) {
-                let litKey = document.getElementById("litKey").value;
-                let chainID = document.getElementById("chainID").value;
-                let accessData = document.getElementById("accessConditions").value;
-                let accessConditions = JSON.parse(accessData);
+                litKey = document.getElementById("litKey").value;
+                chainID = document.getElementById("chainID").value;
+                accessData = document.getElementById("accessConditions").value;
+                accessConditions = JSON.parse(accessData);
             }
             // get values from UI
             let URL = document.getElementById("archiveURI").value;
@@ -390,6 +394,7 @@
                 const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
                 unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
             } else {
+                updateState("Decrypting", 50);
                 unlockedSymmKey = await crypto.subtle.importKey("raw", hexStringToUint8Array(AESKey), SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
             }
 
@@ -404,24 +409,23 @@
 
             Loaddata(decryptedBlobArrayBuffer, readBuffer);
 
-            /*} catch (ex) {
+            } catch (ex) {
                 console.log(ex);
                 if (ex.message == "JSON.parse: unexpected end of data at line 1 column 1 of the JSON data") {
-                    alert("Access conditions are incomplete or inacurrate. If using custom values, verify their content or disable manual settings.");
+                    alert("Access conditions are incomplete or inaccurate. If using custom values, verify their content or disable manual settings.");
                 } else {
                     alert(ex.message);
                 }
                 resetButton();
                 console.log(ex.stack);
             }
-            */
+            
         }
 
         // event listener for main button
 
         document.querySelector('#hello').addEventListener('click', processArchive);
         if (autoRun) {
-            document.getElementById("hello").style.display = "none";
             processArchive();
         }
 
