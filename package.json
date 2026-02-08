@@ -1,0 +1,42 @@
+{
+  "name": "archive-explorer",
+  "version": "1.0.0",
+  "description": "This tool is used to view [Starling Integrity](https://github.com/starlinglab/integrity-backend) encrypted archives that are gated by the [Starling Access Token](https://github.com/starlinglab/starling-access-token) contract using the [Lit Protocol](https://litprotocol.com/). The archives are stored with AES-256 encryption on [IPFS](https://ipfs.tech).",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve:https": "node serve-https.js",
+    "cert:generate": "openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out cert.pem -subj '/CN=localhost'",
+    "deploy:vercel": "npm run build && vercel dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starlinglab/archive-explorer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/starlinglab/archive-explorer/issues"
+  },
+  "homepage": "https://github.com/starlinglab/archive-explorer#readme",
+  "devDependencies": {
+    "vite": "^7.3.1",
+    "vite-plugin-node-polyfills": "^0.25.0"
+  },
+  "dependencies": {
+    "@lit-protocol/auth-helpers": "^8.2.1",
+    "@lit-protocol/constants": "^9.0.1",
+    "@lit-protocol/crypto": "^8.1.0",
+    "@lit-protocol/encryption": "^7.4.0",
+    "@lit-protocol/lit-node-client": "^7.4.0",
+    "axios": "^1.13.5",
+    "buffer": "^6.0.3",
+    "ethers": "^5.7.2",
+    "ipfs-only-hash": "^4.0.0",
+    "jszip": "^3.10.1"
+  }
+}
