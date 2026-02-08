@@ -30,7 +30,7 @@ jobs:
         sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
         npm i --global ipfs-car
         ipfs-car pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrap false --output /tmp/output.car
-        ipfs-car roots /tmp/output.car > res.txt
+        ipfs-car roots /tmp/output.car > /tmp/res.txt
 
     - name: Upload CAR as artifact
       uses: actions/upload-artifact@v4
