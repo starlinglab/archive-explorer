@@ -72,7 +72,7 @@
                 <strong>
                     Chain:
                 </strong>
-                <input type="text" id="chainID" value="mumbai" />
+                <input type="text" id="chainID" value="polygon" />
                 <strong>
                     Type:
                 </strong>
@@ -209,6 +209,7 @@
             document.getElementById("hello").disabled = false;
         }
     </script>
+    <!-- Lit Protocol SDK for Datil testnet -->
     <script onload='litLoaded()' src="https://jscdn.litgateway.com/index.web.js"></script>
     <script type="module">
         async function updateState(state, percent) {
@@ -237,18 +238,54 @@
 
         // new lit node client
         async function litJsSdkLoaded() {
-            let litNodeClient = new LitJsSdk.LitNodeClient();
+            // Initialize Lit client for Datil testnet
+            // The official SDK loads as LitJsSdk
+            var litNodeClient = new LitJsSdk.LitNodeClient({
+                litNetwork: 'datil-test',
+                debug: false
+            });
             await litNodeClient.connect();
             window.litNodeClient = litNodeClient;
-
+            console.log('Connected to Lit Datil testnet');
+            console.log('LitNodeClient methods:', Object.getOwnPropertyNames(Object.getPrototypeOf(litNodeClient)));
+            console.log('LitJsSdk static methods:', Object.getOwnPropertyNames(LitJsSdk));
+            
+            // Check if getEncryptionKey exists
+            if (litNodeClient.getEncryptionKey) {
+                console.log('✓ getEncryptionKey method exists on client');
+            } else {
+                console.log('✗ getEncryptionKey method NOT found on client');
+            }
+            
+            // Check other possible methods
+            const possibleMethods = ['decrypt', 'encrypt', 'saveEncryptionKey', 'retrieveEncryptionKey'];
+            possibleMethods.forEach(method => {
+                if (litNodeClient[method]) {
+                    console.log(`✓ ${method} method exists on client`);
+                }
+            });
         }
 
         // get auth signature
         async function getAuthSign() {
-            var authSig = await LitJsSdk.checkAndSignAuthMessage({
-                chain: chain(),
-            });
-            return authSig;
+            // Check if SDK is loaded
+            if (typeof LitJsSdk === 'undefined') {
+                alert('Lit SDK not loaded. Please wait and try again.');
+                console.error('LitJsSdk is not defined');
+                return null;
+            }
+            
+            try {
+                // Create auth signature for Datil testnet
+                const authSig = await LitJsSdk.checkAndSignAuthMessage({
+                    chain: chain()
+                });
+                return authSig;
+            } catch (error) {
+                console.error('Error getting auth signature:', error);
+                alert('Error connecting to wallet: ' + error.message);
+                return null;
+            }
         }
         async function prepareArchiveURI(archiveURI) {
             // prepend IPFS gateway if IPFS URI
@@ -368,7 +405,21 @@
                 litKey = document.getElementById("litKey").value;
                 chainID = document.getElementById("chainID").value;
                 accessData = document.getElementById("accessConditions").value;
-                accessConditions = JSON.parse(accessData);
+                
+                // Check if accessData is empty or invalid
+                if (!accessData || accessData.trim() === '') {
+                    alert("Access conditions are missing. Please ensure the token has been properly initialized with LIT access conditions.");
+                    resetButton();
+                    return;
+                }
+                
+                try {
+                    accessConditions = JSON.parse(accessData);
+                } catch (e) {
+                    alert("Invalid access conditions format. Please check the JSON formatting.");
+                    resetButton();
+                    return;
+                }
             }
             // get values from UI
             let URL = document.getElementById("archiveURI").value;
@@ -389,10 +440,48 @@
                 // check and sign auth message
                 const authSign = await LitJsSdk.checkAndSignAuthMessage({ chain: chainID });
 
-                let litNodeClient = new LitJsSdk.LitNodeClient({ alertWhenUnauthorized: false });
+                let litNodeClient = new LitJsSdk.LitNodeClient({ 
+                    litNetwork: 'datil-test',
+                    alertWhenUnauthorized: false 
+                });
 
                 await litNodeClient.connect();
-                const unlockedKey = await litNodeClient.getEncryptionKey({ accessControlConditions: accessConditions, toDecrypt: litKey, authSig: authSign, chain: chainID });
+                
+                // Try different decryption methods based on what's available
+                let unlockedKey;
+                try {
+                    if (litNodeClient.getEncryptionKey) {
+                        // Original API method
+                        unlockedKey = await litNodeClient.getEncryptionKey({ 
+                            accessControlConditions: accessConditions, 
+                            toDecrypt: litKey, 
+                            authSig: authSign, 
+                            chain: chainID 
+                        });
+                    } else if (LitJsSdk.decryptString) {
+                        // Static method approach
+                        const decryptResult = await LitJsSdk.decryptString({
+                            accessControlConditions: accessConditions,
+                            ciphertext: litKey,
+                            dataToEncryptHash: litKey,
+                            authSig: authSign,
+                            chain: chainID
+                        }, litNodeClient);
+                        
+                        // Handle different return formats
+                        if (typeof decryptResult === 'string') {
+                            unlockedKey = LitJsSdk.uint8arrayFromString(decryptResult, "base16");
+                        } else {
+                            unlockedKey = decryptResult;
+                        }
+                    } else {
+                        throw new Error('No decryption method found');
+                    }
+                } catch (error) {
+                    console.error('Decryption failed:', error);
+                    throw error;
+                }
+                
                 unlockedSymmKey = await crypto.subtle.importKey("raw", unlockedKey, SYMM_KEY_ALGO_PARAMS, true, ["encrypt", "decrypt"]);
             } else {
                 updateState("Decrypting", 50);
