@@ -30,17 +30,19 @@ jobs:
         sed -i "s#<\!--VERSION PLACEHOLDER-->#$ver#" $GITHUB_WORKSPACE/$ROOT_PATH/index.html
         npm i --global ipfs-car
         ipfs-car pack $GITHUB_WORKSPACE/$ROOT_PATH/ --wrap false --output /tmp/output.car
+        ipfs-car roots /tmp/output.car > res.txt
 
     - name: Upload CAR as artifact
       uses: actions/upload-artifact@v4
       with:
         name: archive-explorer-car
         path: /tmp/output.car
+
     - name: Update DNS
       run: |
         cat /tmp/res.txt
         echo Reading IPFS CID
-        IPFS=$(cat /tmp/res.txt | jq .cid | tr -d \"_)
+        IPFS=$(cat /tmp/res.txt)
         echo "Pinning $IPFS"
         if [ -n "$HEPASSWORD" ]; then
           curl -4 "https://_dnslink.$HOSTNAME:$HEPASSWORD@dyn.dns.he.net/nic/update" -d "hostname=_dnslink.$HOSTNAME" -d "txt=dnslink=/ipfs/$IPFS"
